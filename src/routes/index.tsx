@@ -402,7 +402,6 @@ jobs:
               [Webhook, "Webhooks"],
             ].map(([Icon, label], i) => (
               <div key={i} className="flex items-center gap-2 rounded-lg border border-border bg-surface p-3 text-[13px]">
-                {/* @ts-expect-error */}
                 <Icon className="h-4 w-4 text-text-secondary" />
                 {label as string}
               </div>
