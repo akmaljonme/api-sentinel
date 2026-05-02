@@ -9,38 +9,75 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SpecsIdRouteImport } from './routes/specs.$id'
+import { Route as DriftIdRouteImport } from './routes/drift.$id'
 
+const DashboardRoute = DashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const SpecsIdRoute = SpecsIdRouteImport.update({
+  id: '/specs/$id',
+  path: '/specs/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DriftIdRoute = DriftIdRouteImport.update({
+  id: '/drift/$id',
+  path: '/drift/$id',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRoute
+  '/drift/$id': typeof DriftIdRoute
+  '/specs/$id': typeof SpecsIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRoute
+  '/drift/$id': typeof DriftIdRoute
+  '/specs/$id': typeof SpecsIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/dashboard': typeof DashboardRoute
+  '/drift/$id': typeof DriftIdRoute
+  '/specs/$id': typeof SpecsIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/dashboard' | '/drift/$id' | '/specs/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/dashboard' | '/drift/$id' | '/specs/$id'
+  id: '__root__' | '/' | '/dashboard' | '/drift/$id' | '/specs/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DashboardRoute: typeof DashboardRoute
+  DriftIdRoute: typeof DriftIdRoute
+  SpecsIdRoute: typeof SpecsIdRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/dashboard': {
+      id: '/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof DashboardRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +85,28 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/specs/$id': {
+      id: '/specs/$id'
+      path: '/specs/$id'
+      fullPath: '/specs/$id'
+      preLoaderRoute: typeof SpecsIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/drift/$id': {
+      id: '/drift/$id'
+      path: '/drift/$id'
+      fullPath: '/drift/$id'
+      preLoaderRoute: typeof DriftIdRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DashboardRoute: DashboardRoute,
+  DriftIdRoute: DriftIdRoute,
+  SpecsIdRoute: SpecsIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
