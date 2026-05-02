@@ -25,7 +25,7 @@ info:
   title: `}<span className="text-cyan-300">payments-api</span>{`
   version: `}<span className="text-cyan-300">2.3.0</span>{`
 paths:
-  `}<span className="text-indigo-300">/users/{id}</span>{`:
+  `}<span className="text-indigo-300">{`/users/{id}`}</span>{`:
     `}<span className="text-rose-300 line-through">delete:</span>{`
       `}<span className="text-rose-300 line-through">summary: Remove user</span>{`
       `}<span className="text-rose-300 line-through">responses:</span>{`
