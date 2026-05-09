@@ -16,7 +16,7 @@ export function Footer() {
           <div className="md:col-span-2">
             <Logo />
             <p className="mt-4 max-w-xs text-sm text-text-secondary">
-              API contracts that never break production. Mock, test, and ship with confidence.
+              API flows that never break production. Mock, test, and ship with confidence.
             </p>
             <div className="mt-6 flex items-center gap-2">
               {[Github, Twitter, Linkedin].map((Icon, i) => (
@@ -40,7 +40,7 @@ export function Footer() {
           ))}
         </div>
         <div className="mt-16 flex flex-col gap-4 border-t border-border pt-6 sm:flex-row sm:items-center sm:justify-between">
-          <p className="text-xs text-text-muted">© 2025 SpecSync Inc. All rights reserved.</p>
+          <p className="text-xs text-text-muted">© 2026 Flowt Inc. · flowt.dev</p>
           <div className="flex items-center gap-2">
             <span className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-xs text-text-secondary">
               <span className="h-1.5 w-1.5 rounded-full bg-success" /> SOC2 Type II
