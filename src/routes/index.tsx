@@ -2,8 +2,49 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { HeroMockup } from "@/components/landing/HeroMockup";
-import { ArrowRight, Play, Check, Sparkles, Github, Slack, Webhook, ShieldCheck, Zap, GitPullRequest, ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { ArrowRight, Check, Sparkles, Github, Slack, Webhook, ShieldCheck, Zap, GitPullRequest, ChevronDown, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { joinWaitlist } from "@/lib/waitlist";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+function WaitlistForm() {
+  const [email, setEmail] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [count, setCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    supabase.from("waitlist").select("id", { count: "exact", head: true })
+      .then(({ count }) => setCount(count));
+  }, []);
+
+  async function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    const r = await joinWaitlist(email);
+    setBusy(false);
+    if (r.ok) { toast.success(r.message); setEmail(""); setCount((c) => (c ?? 0) + 1); }
+    else toast.error(r.message);
+  }
+
+  return (
+    <div className="mx-auto max-w-md">
+      <form onSubmit={onSubmit} className="flex gap-2">
+        <input
+          type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@company.com"
+          className="h-12 flex-1 rounded-lg border border-border bg-surface/80 px-4 text-[14px] text-foreground placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+        <button disabled={busy} className="inline-flex h-12 items-center gap-2 rounded-lg bg-primary px-5 text-[14px] font-medium text-white hover:bg-primary-hover disabled:opacity-60 transition-colors">
+          {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Join waitlist <ArrowRight className="h-4 w-4" /></>}
+        </button>
+      </form>
+      {count !== null && count > 0 && (
+        <p className="mt-3 text-[12.5px] text-text-muted">Join {count.toLocaleString()}+ developers already on the list</p>
+      )}
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/")({
   head: () => ({
