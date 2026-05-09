@@ -29,11 +29,11 @@ export function Nav() {
           </nav>
         </div>
         <div className="flex items-center gap-2">
-          <a href="#" className="hidden sm:inline-flex h-9 items-center rounded-md px-3 text-sm text-text-secondary hover:text-foreground transition-colors">
+          <Link to="/login" className="hidden sm:inline-flex h-9 items-center rounded-md px-3 text-sm text-text-secondary hover:text-foreground transition-colors">
             Sign in
-          </a>
+          </Link>
           <Link
-            to="/dashboard"
+            to="/signup"
             className="inline-flex h-9 items-center rounded-md bg-primary px-3.5 text-sm font-medium text-primary-foreground shadow-[0_0_0_1px_rgba(255,255,255,0.08)_inset,0_8px_24px_-12px_rgba(99,102,241,0.6)] hover:bg-primary-hover transition-colors duration-150"
           >
             Start free

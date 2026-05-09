@@ -2,16 +2,57 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { HeroMockup } from "@/components/landing/HeroMockup";
-import { ArrowRight, Play, Check, Sparkles, Github, Slack, Webhook, ShieldCheck, Zap, GitPullRequest, ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { ArrowRight, Check, Sparkles, Github, Slack, Webhook, ShieldCheck, Zap, GitPullRequest, ChevronDown, Loader2 } from "lucide-react";
+import { useEffect, useState } from "react";
+import { joinWaitlist } from "@/lib/waitlist";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+
+function WaitlistForm() {
+  const [email, setEmail] = useState("");
+  const [busy, setBusy] = useState(false);
+  const [count, setCount] = useState<number | null>(null);
+
+  useEffect(() => {
+    supabase.from("waitlist").select("id", { count: "exact", head: true })
+      .then(({ count }) => setCount(count));
+  }, []);
+
+  async function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setBusy(true);
+    const r = await joinWaitlist(email);
+    setBusy(false);
+    if (r.ok) { toast.success(r.message); setEmail(""); setCount((c) => (c ?? 0) + 1); }
+    else toast.error(r.message);
+  }
+
+  return (
+    <div className="mx-auto max-w-md">
+      <form onSubmit={onSubmit} className="flex gap-2">
+        <input
+          type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
+          placeholder="you@company.com"
+          className="h-12 flex-1 rounded-lg border border-border bg-surface/80 px-4 text-[14px] text-foreground placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
+        />
+        <button disabled={busy} className="inline-flex h-12 items-center gap-2 rounded-lg bg-primary px-5 text-[14px] font-medium text-white hover:bg-primary-hover disabled:opacity-60 transition-colors">
+          {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Join waitlist <ArrowRight className="h-4 w-4" /></>}
+        </button>
+      </form>
+      {count !== null && count > 0 && (
+        <p className="mt-3 text-[12.5px] text-text-muted">Join {count.toLocaleString()}+ developers already on the list</p>
+      )}
+    </div>
+  );
+}
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "SpecSync — API contracts that never break production" },
-      { name: "description", content: "Mock servers in seconds. Drift alerts in CI/CD. The API contract testing platform built for modern teams." },
-      { property: "og:title", content: "SpecSync — API contracts that never break production" },
-      { property: "og:description", content: "Mock servers in seconds. Drift alerts in CI/CD." },
+      { title: "Flowt — API flows that never break production" },
+      { name: "description", content: "The API contract testing platform. Instant mock servers, drift detection, and CI/CD alerts." },
+      { property: "og:title", content: "Flowt — API flows that never break production" },
+      { property: "og:description", content: "Instant mock servers. Drift detection. CI/CD alerts." },
     ],
   }),
   component: Landing,
@@ -53,24 +94,18 @@ function Hero() {
         </div>
 
         <h1 className="mx-auto mt-7 max-w-4xl text-[44px] sm:text-[60px] lg:text-[72px] font-bold leading-[1.05] tracking-[-0.02em] animate-fade-up" style={{ animationDelay: "60ms" }}>
-          API contracts that
+          API flows that
           <br />
           <span className="text-gradient">never break production</span>
         </h1>
 
         <p className="mx-auto mt-6 max-w-2xl text-[18px] sm:text-[20px] leading-[1.6] text-text-secondary animate-fade-up" style={{ animationDelay: "120ms" }}>
-          SpecSync catches breaking API changes before they reach your users.
+          Flowt catches breaking API changes before they reach your users.
           Mock servers in seconds. Drift alerts in CI/CD.
         </p>
 
-        <div className="mt-9 flex flex-col sm:flex-row items-center justify-center gap-3 animate-fade-up" style={{ animationDelay: "180ms" }}>
-          <a href="#" className="inline-flex h-12 items-center gap-2 rounded-lg bg-primary px-5 text-[15px] font-medium text-white shadow-[0_0_0_1px_rgba(255,255,255,0.1)_inset,0_20px_60px_-20px_rgba(99,102,241,0.6)] hover:bg-primary-hover transition-colors">
-            Upload your spec — it&apos;s free
-            <ArrowRight className="h-4 w-4" />
-          </a>
-          <a href="#" className="inline-flex h-12 items-center gap-2 rounded-lg border border-border bg-surface/50 px-5 text-[15px] font-medium text-foreground hover:border-border-hover transition-colors">
-            <Play className="h-4 w-4 text-primary-hover" /> See a live demo
-          </a>
+        <div className="mt-9 animate-fade-up" style={{ animationDelay: "180ms" }}>
+          <WaitlistForm />
         </div>
 
         <div className="mt-10 flex flex-col items-center gap-4 animate-fade-up" style={{ animationDelay: "240ms" }}>

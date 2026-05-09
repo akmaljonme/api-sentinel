@@ -1,0 +1,54 @@
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
+import { signUpWithEmail, signInWithGoogle } from "@/lib/auth";
+import { AuthShell, Field, Divider, GoogleIcon } from "./login";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
+
+export const Route = createFileRoute("/signup")({
+  head: () => ({ meta: [{ title: "Create account — Flowt" }, { name: "description", content: "Create your Flowt account." }] }),
+  component: SignupPage,
+});
+
+function SignupPage() {
+  const nav = useNavigate();
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  async function onSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (password.length < 8) return toast.error("Password must be at least 8 characters.");
+    setBusy(true);
+    try {
+      await signUpWithEmail(email, password, name);
+      toast.success("Account created — welcome to Flowt!");
+      nav({ to: "/dashboard" });
+    } catch (err: any) {
+      toast.error(err.message || "Could not create account");
+    } finally { setBusy(false); }
+  }
+
+  async function onGoogle() {
+    try { await signInWithGoogle(); } catch (e: any) { toast.error(e.message); }
+  }
+
+  return <AuthShell title="Create your workspace" subtitle="Free forever for one spec. No credit card." footer={
+    <>Already have an account? <Link to="/login" className="text-primary-hover hover:underline">Sign in</Link></>
+  }>
+    <button onClick={onGoogle} className="flex h-10 w-full items-center justify-center gap-2 rounded-md border border-border bg-surface text-[14px] font-medium hover:border-border-hover transition-colors">
+      <GoogleIcon /> Continue with Google
+    </button>
+    <Divider />
+    <form onSubmit={onSubmit} className="space-y-3">
+      <Field label="Full name" type="text" value={name} onChange={setName} autoComplete="name" required />
+      <Field label="Work email" type="email" value={email} onChange={setEmail} autoComplete="email" required />
+      <Field label="Password (min 8 chars)" type="password" value={password} onChange={setPassword} autoComplete="new-password" required />
+      <button disabled={busy} className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md bg-primary text-[14px] font-medium text-white hover:bg-primary-hover disabled:opacity-60 transition-colors">
+        {busy && <Loader2 className="h-4 w-4 animate-spin" />} Create account
+      </button>
+    </form>
+    <p className="text-center text-[11px] text-text-muted">By signing up you agree to our Terms and Privacy Policy.</p>
+  </AuthShell>;
+}

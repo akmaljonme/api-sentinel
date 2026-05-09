@@ -29,10 +29,10 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "SpecSync — API contracts that never break production" },
-      { name: "description", content: "SpecSync catches breaking API changes before they reach your users. Mock servers in seconds. Drift alerts in CI/CD." },
-      { property: "og:title", content: "SpecSync — API contracts that never break production" },
-      { property: "og:description", content: "Mock servers in seconds. Drift alerts in CI/CD." },
+      { title: "Flowt — API flows that never break production" },
+      { name: "description", content: "Flowt is the API contract testing platform. Instant mock servers, drift detection, and CI/CD alerts that catch breaking changes before they ship." },
+      { property: "og:title", content: "Flowt — API flows that never break production" },
+      { property: "og:description", content: "Instant mock servers. Drift detection. CI/CD alerts." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
     ],
@@ -62,6 +62,13 @@ function RootShell({ children }: { children: React.ReactNode }) {
   );
 }
 
+import { Toaster } from "sonner";
+
 function RootComponent() {
-  return <Outlet />;
+  return (
+    <>
+      <Outlet />
+      <Toaster theme="dark" position="top-right" richColors closeButton />
+    </>
+  );
 }
