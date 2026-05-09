@@ -14,13 +14,357 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      api_keys: {
+        Row: {
+          created_at: string | null
+          id: string
+          key_hash: string
+          key_preview: string
+          last_used_at: string | null
+          name: string
+          org_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          key_hash: string
+          key_preview: string
+          last_used_at?: string | null
+          name: string
+          org_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          key_hash?: string
+          key_preview?: string
+          last_used_at?: string | null
+          name?: string
+          org_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "api_keys_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      drift_reports: {
+        Row: {
+          breaking_count: number | null
+          changes: Json | null
+          created_at: string | null
+          id: string
+          info_count: number | null
+          new_content: string | null
+          new_version: string | null
+          old_content: string | null
+          old_version: string | null
+          spec_id: string | null
+          warning_count: number | null
+        }
+        Insert: {
+          breaking_count?: number | null
+          changes?: Json | null
+          created_at?: string | null
+          id?: string
+          info_count?: number | null
+          new_content?: string | null
+          new_version?: string | null
+          old_content?: string | null
+          old_version?: string | null
+          spec_id?: string | null
+          warning_count?: number | null
+        }
+        Update: {
+          breaking_count?: number | null
+          changes?: Json | null
+          created_at?: string | null
+          id?: string
+          info_count?: number | null
+          new_content?: string | null
+          new_version?: string | null
+          old_content?: string | null
+          old_version?: string | null
+          spec_id?: string | null
+          warning_count?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "drift_reports_spec_id_fkey"
+            columns: ["spec_id"]
+            isOneToOne: false
+            referencedRelation: "specs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      invitations: {
+        Row: {
+          accepted_at: string | null
+          created_at: string | null
+          email: string
+          id: string
+          org_id: string | null
+          role: string | null
+          token: string | null
+        }
+        Insert: {
+          accepted_at?: string | null
+          created_at?: string | null
+          email: string
+          id?: string
+          org_id?: string | null
+          role?: string | null
+          token?: string | null
+        }
+        Update: {
+          accepted_at?: string | null
+          created_at?: string | null
+          email?: string
+          id?: string
+          org_id?: string | null
+          role?: string | null
+          token?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invitations_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mock_requests: {
+        Row: {
+          created_at: string | null
+          duration_ms: number | null
+          id: string
+          method: string | null
+          mock_server_id: string | null
+          path: string | null
+          response_body: Json | null
+          status_code: number | null
+        }
+        Insert: {
+          created_at?: string | null
+          duration_ms?: number | null
+          id?: string
+          method?: string | null
+          mock_server_id?: string | null
+          path?: string | null
+          response_body?: Json | null
+          status_code?: number | null
+        }
+        Update: {
+          created_at?: string | null
+          duration_ms?: number | null
+          id?: string
+          method?: string | null
+          mock_server_id?: string | null
+          path?: string | null
+          response_body?: Json | null
+          status_code?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mock_requests_mock_server_id_fkey"
+            columns: ["mock_server_id"]
+            isOneToOne: false
+            referencedRelation: "mock_servers"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      mock_servers: {
+        Row: {
+          created_at: string | null
+          id: string
+          org_id: string | null
+          request_count: number | null
+          spec_id: string | null
+          status: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          org_id?: string | null
+          request_count?: number | null
+          spec_id?: string | null
+          status?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          org_id?: string | null
+          request_count?: number | null
+          spec_id?: string | null
+          status?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "mock_servers_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "mock_servers_spec_id_fkey"
+            columns: ["spec_id"]
+            isOneToOne: false
+            referencedRelation: "specs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      organizations: {
+        Row: {
+          created_at: string | null
+          id: string
+          name: string
+          plan: string | null
+          slug: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          name: string
+          plan?: string | null
+          slug: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          name?: string
+          plan?: string | null
+          slug?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+        }
+        Relationships: []
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string | null
+          full_name: string | null
+          id: string
+          org_id: string | null
+          role: string | null
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          id: string
+          org_id?: string | null
+          role?: string | null
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          id?: string
+          org_id?: string | null
+          role?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "profiles_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      specs: {
+        Row: {
+          content: string
+          created_at: string | null
+          endpoint_count: number | null
+          github_path: string | null
+          github_repo: string | null
+          id: string
+          name: string
+          org_id: string | null
+          parsed_data: Json | null
+          status: string | null
+          updated_at: string | null
+          version: string | null
+        }
+        Insert: {
+          content: string
+          created_at?: string | null
+          endpoint_count?: number | null
+          github_path?: string | null
+          github_repo?: string | null
+          id?: string
+          name: string
+          org_id?: string | null
+          parsed_data?: Json | null
+          status?: string | null
+          updated_at?: string | null
+          version?: string | null
+        }
+        Update: {
+          content?: string
+          created_at?: string | null
+          endpoint_count?: number | null
+          github_path?: string | null
+          github_repo?: string | null
+          id?: string
+          name?: string
+          org_id?: string | null
+          parsed_data?: Json | null
+          status?: string | null
+          updated_at?: string | null
+          version?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "specs_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: false
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      waitlist: {
+        Row: {
+          created_at: string | null
+          email: string
+          id: string
+        }
+        Insert: {
+          created_at?: string | null
+          email: string
+          id?: string
+        }
+        Update: {
+          created_at?: string | null
+          email?: string
+          id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      current_org_id: { Args: never; Returns: string }
     }
     Enums: {
       [_ in never]: never
