@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { DashboardLayout } from "@/components/dashboard/Layout";
-import { Search, Copy, Play, Loader2, GitCompare, ExternalLink } from "lucide-react";
+import { Search, Copy, Play, Loader2, GitCompare } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { getSpec } from "@/lib/specs";
 import { toast } from "sonner";
