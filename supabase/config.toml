@@ -1,1 +1,4 @@
 project_id = "dlamxhxfndvabuhpvxxc"
+
+[functions.mock-server]
+verify_jwt = false
