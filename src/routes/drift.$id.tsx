@@ -1,256 +1,184 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { DashboardLayout } from "@/components/dashboard/Layout";
-import { RefreshCw, ChevronDown, Sparkles } from "lucide-react";
+import { useEffect, useState } from "react";
+import { getSpec, getDriftReports, runDriftCheck } from "@/lib/specs";
+import { AlertTriangle, AlertCircle, Info, Loader2, Upload, ArrowLeft, GitCompare } from "lucide-react";
+import { toast } from "sonner";
 
 export const Route = createFileRoute("/drift/$id")({
-  head: ({ params }) => ({ meta: [{ title: `${params.id} — Drift report` }, { name: "description", content: "Side-by-side spec diff with impact analysis." }] }),
+  head: () => ({ meta: [{ title: "Drift report — Flowt" }, { name: "description", content: "Spec drift report and breaking change history." }] }),
   component: DriftPage,
 });
 
-const versions = ["v1.0", "v1.1", "v1.2", "v1.9", "v2.0"];
-
 function DriftPage() {
   const { id } = Route.useParams();
+  const [spec, setSpec] = useState<any>(null);
+  const [reports, setReports] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [active, setActive] = useState<string | null>(null);
+  const [showCompare, setShowCompare] = useState(false);
+  const [newContent, setNewContent] = useState("");
+  const [busy, setBusy] = useState(false);
+
+  async function load() {
+    setLoading(true);
+    try {
+      const [s, r] = await Promise.all([getSpec(id), getDriftReports(id)]);
+      setSpec(s);
+      setReports(r);
+      setActive(r[0]?.id ?? null);
+    } catch (e: any) { toast.error(e.message); }
+    finally { setLoading(false); }
+  }
+  useEffect(() => { load(); }, [id]);
+
+  async function onFile(f: File) {
+    const text = await f.text();
+    setNewContent(text);
+  }
+
+  async function compare() {
+    if (!newContent.trim()) return toast.error("Paste or upload a new spec version");
+    setBusy(true);
+    try {
+      await runDriftCheck(id, newContent);
+      toast.success("Drift report generated");
+      setShowCompare(false);
+      setNewContent("");
+      await load();
+    } catch (e: any) { toast.error(e.message); }
+    finally { setBusy(false); }
+  }
+
+  if (loading) {
+    return (
+      <DashboardLayout crumbs={["Dashboard", "Drift"]} action={false}>
+        <div className="grid place-items-center py-32 text-text-secondary"><Loader2 className="h-5 w-5 animate-spin" /></div>
+      </DashboardLayout>
+    );
+  }
+  if (!spec) return null;
+
+  const report = reports.find((r) => r.id === active);
+  const changes: any[] = (report?.changes as any[]) || [];
+  const breaking = changes.filter((c) => c.severity === "breaking");
+  const warnings = changes.filter((c) => c.severity === "warning");
+  const info = changes.filter((c) => c.severity === "info");
+
   return (
-    <DashboardLayout crumbs={["Dashboard", "Drift Reports", id]} action={false}>
+    <DashboardLayout crumbs={["Dashboard", "Drift", spec.name]} action={false}>
       <div className="mx-auto max-w-7xl p-6 lg:p-8 space-y-6">
-        {/* Header */}
-        <div className="flex flex-wrap items-center justify-between gap-4">
+        <div className="flex items-center justify-between flex-wrap gap-4">
           <div>
-            <div className="flex items-center gap-3">
-              <h1 className="text-[22px] font-semibold tracking-tight">{id}</h1>
-              <button className="inline-flex items-center gap-1.5 rounded-md border border-border bg-surface px-2.5 h-7 text-[12px] text-text-secondary hover:border-border-hover hover:text-foreground transition-colors">
-                v1.9 → v2.0 <ChevronDown className="h-3 w-3" />
+            <Link to="/specs/$id" params={{ id: spec.id }} className="inline-flex items-center gap-1.5 text-[12px] text-text-secondary hover:text-foreground">
+              <ArrowLeft className="h-3 w-3" /> Back to spec
+            </Link>
+            <h1 className="mt-2 text-[24px] font-semibold tracking-tight">Drift reports · {spec.name}</h1>
+            <p className="mt-1 text-[13px] text-text-secondary">Compare spec versions to detect breaking changes before they ship.</p>
+          </div>
+          <button onClick={() => setShowCompare((v) => !v)} className="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-3.5 text-[13px] font-medium text-white hover:bg-primary-hover">
+            <GitCompare className="h-3.5 w-3.5" /> Compare new version
+          </button>
+        </div>
+
+        {showCompare && (
+          <div className="rounded-xl border border-border bg-surface p-5 space-y-3">
+            <div className="text-[14px] font-semibold">Upload updated spec</div>
+            <label className="flex items-center justify-center gap-2 rounded-md border border-dashed border-border bg-background/40 py-6 cursor-pointer hover:border-primary/50">
+              <Upload className="h-4 w-4 text-text-secondary" />
+              <span className="text-[13px] text-text-secondary">Click to upload .yaml / .json</span>
+              <input type="file" accept=".yaml,.yml,.json" className="hidden" onChange={(e) => e.target.files?.[0] && onFile(e.target.files[0])} />
+            </label>
+            <textarea value={newContent} onChange={(e) => setNewContent(e.target.value)} spellCheck={false}
+              placeholder="…or paste new spec version"
+              className="block w-full h-44 rounded-md border border-border bg-background p-3 font-mono text-[12px] text-text-secondary focus:outline-none focus:ring-2 focus:ring-primary resize-none"
+            />
+            <div className="flex justify-end gap-2">
+              <button onClick={() => setShowCompare(false)} className="h-9 rounded-md border border-border bg-surface px-3 text-[13px] hover:border-border-hover">Cancel</button>
+              <button disabled={busy} onClick={compare} className="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-3.5 text-[13px] font-medium text-white hover:bg-primary-hover disabled:opacity-60">
+                {busy && <Loader2 className="h-3.5 w-3.5 animate-spin" />} Run drift check
               </button>
             </div>
-            <p className="mt-1 text-[12.5px] text-text-muted">Last checked 2 minutes ago</p>
           </div>
-          <div className="flex items-center gap-2">
-            <span className="inline-flex items-center gap-1.5 rounded-md bg-danger/15 px-2.5 py-1 text-[12px] font-medium text-danger">
-              <span className="h-1.5 w-1.5 rounded-full bg-danger" /> 3 breaking changes
-            </span>
-            <button className="inline-flex h-8 items-center gap-1.5 rounded-md border border-border bg-surface px-2.5 text-[12px] text-text-secondary hover:border-border-hover hover:text-foreground transition-colors">
-              <RefreshCw className="h-3.5 w-3.5" /> Refresh
-            </button>
-          </div>
-        </div>
+        )}
 
-        {/* Version timeline */}
-        <div className="rounded-xl border border-border bg-surface p-4">
-          <div className="text-[11px] uppercase tracking-wider text-text-muted mb-3">Version history</div>
-          <div className="relative flex items-center gap-2">
-            {versions.map((v, i) => {
-              const current = i === versions.length - 1;
-              const prev = i === versions.length - 2;
-              return (
-                <div key={v} className="flex items-center gap-2">
-                  <button
-                    className={`group flex flex-col items-center ${current ? "text-foreground" : "text-text-secondary"}`}
-                  >
-                    <span
-                      className={`grid h-7 w-7 place-items-center rounded-full text-[10px] font-semibold transition-colors ${
-                        current
-                          ? "bg-primary text-white shadow-[0_0_0_4px_rgba(99,102,241,0.2)]"
-                          : prev
-                          ? "bg-warning/20 text-warning"
-                          : "bg-white/5 text-text-secondary group-hover:bg-white/10"
-                      }`}
+        {!reports.length ? (
+          <div className="rounded-xl border border-dashed border-border bg-surface/40 p-12 text-center">
+            <div className="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-primary/15 text-primary-hover">
+              <GitCompare className="h-5 w-5" />
+            </div>
+            <h2 className="mt-4 text-[16px] font-semibold">No drift reports yet</h2>
+            <p className="mt-1 text-[13px] text-text-secondary">Upload a new version of this spec to detect breaking changes.</p>
+          </div>
+        ) : (
+          <div className="grid gap-6 lg:grid-cols-[260px_1fr]">
+            <aside className="rounded-xl border border-border bg-surface overflow-hidden">
+              <div className="border-b border-border px-4 py-2.5 text-[12px] font-semibold">History</div>
+              <ul>
+                {reports.map((r) => (
+                  <li key={r.id}>
+                    <button
+                      onClick={() => setActive(r.id)}
+                      className={`w-full text-left px-4 py-3 border-b border-border transition-colors ${active === r.id ? "bg-primary/10" : "hover:bg-white/[0.03]"}`}
                     >
-                      {v.replace("v", "")}
-                    </span>
-                    <span className="mt-1.5 text-[11px]">{v}</span>
-                  </button>
-                  {i < versions.length - 1 && <div className="h-px w-10 bg-border" />}
-                </div>
-              );
-            })}
-          </div>
-        </div>
-
-        <div className="grid gap-6 lg:grid-cols-[1fr_320px]">
-          <div className="space-y-6">
-            <ChangeGroup
-              tone="danger"
-              title="Breaking"
-              count={3}
-              items={[
-                {
-                  title: "Endpoint removed",
-                  desc: "DELETE /users/{id}",
-                  left: ["delete:", "  summary: Remove user", "  responses:", "    '204':", "      description: No Content"].map((l) => ({ l, kind: "del" })),
-                  right: [{ l: "(removed)", kind: "muted" }],
-                },
-                {
-                  title: "Required field added",
-                  desc: "POST /orders → customer_id",
-                  left: ["required:", "  - amount", "properties:", "  amount: integer"].map((l) => ({ l, kind: "ctx" })),
-                  right: [
-                    { l: "required:", kind: "ctx" },
-                    { l: "  - amount", kind: "ctx" },
-                    { l: "  - customer_id", kind: "add" },
-                    { l: "properties:", kind: "ctx" },
-                    { l: "  amount: integer", kind: "ctx" },
-                    { l: "  customer_id: string", kind: "add" },
-                  ],
-                },
-                {
-                  title: "Auth scope renamed",
-                  desc: "users.write → users.modify",
-                  left: [{ l: "scopes: [users.write]", kind: "del" }],
-                  right: [{ l: "scopes: [users.modify]", kind: "add" }],
-                },
-              ]}
-            />
-            <ChangeGroup
-              tone="warning"
-              title="Warning"
-              count={1}
-              items={[
-                {
-                  title: "Response field type changed",
-                  desc: "GET /products → price (integer → float)",
-                  left: [{ l: "price: integer", kind: "del" }],
-                  right: [{ l: "price: number (float)", kind: "add" }],
-                },
-              ]}
-            />
-            <ChangeGroup
-              tone="success"
-              title="Info"
-              count={2}
-              items={[
-                {
-                  title: "Optional field added",
-                  desc: "GET /users → avatar_url",
-                  left: [{ l: "(not present)", kind: "muted" }],
-                  right: [{ l: "avatar_url: string (optional)", kind: "add" }],
-                },
-                {
-                  title: "New endpoint added",
-                  desc: "GET /users/{id}/preferences",
-                  left: [{ l: "(not present)", kind: "muted" }],
-                  right: [{ l: "GET /users/{id}/preferences", kind: "add" }],
-                },
-              ]}
-            />
-          </div>
-
-          {/* Impact sidebar */}
-          <aside className="space-y-4">
-            <div className="rounded-xl border border-border bg-surface p-4">
-              <div className="text-[12px] font-semibold">Impact analysis</div>
-              <div className="mt-3 text-[11.5px] uppercase tracking-wider text-text-muted">What this breaks</div>
-              <ul className="mt-2 space-y-2">
-                {[
-                  "3 frontend components use DELETE /users/{id}",
-                  "12 integration tests will fail",
-                  "1 mobile SDK release blocked",
-                ].map((t) => (
-                  <li key={t} className="flex items-start gap-2 text-[13px] text-foreground">
-                    <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-danger" />
-                    {t}
+                      <div className="text-[12.5px] font-mono">{r.old_version || "v?"} → {r.new_version || "v?"}</div>
+                      <div className="mt-1 text-[10.5px] text-text-muted">{new Date(r.created_at).toLocaleString()}</div>
+                      <div className="mt-1.5 flex gap-1.5 text-[10px]">
+                        {r.breaking_count > 0 && <span className="rounded bg-danger/15 px-1.5 py-0.5 text-danger">{r.breaking_count} breaking</span>}
+                        {r.warning_count > 0 && <span className="rounded bg-warning/15 px-1.5 py-0.5 text-warning">{r.warning_count} warn</span>}
+                        {r.info_count > 0 && <span className="rounded bg-blue-500/15 px-1.5 py-0.5 text-blue-400">{r.info_count} info</span>}
+                      </div>
+                    </button>
                   </li>
                 ))}
               </ul>
-            </div>
+            </aside>
 
-            <div className="rounded-xl border border-border bg-gradient-to-br from-primary/10 to-cyan-500/5 p-4">
-              <div className="flex items-center gap-2 text-[12px] font-semibold">
-                <Sparkles className="h-3.5 w-3.5 text-primary-hover" /> Suggested fix
-              </div>
-              <p className="mt-2 text-[13px] text-text-secondary">
-                Mark <code className="font-mono text-[12px] text-foreground">DELETE /users/{`{id}`}</code> as <code className="font-mono text-[12px] text-foreground">deprecated: true</code> instead of removing. Bump the major version to v3.0 and run a 30-day sunset window.
-              </p>
-              <button className="mt-3 inline-flex h-8 items-center gap-1.5 rounded-md bg-primary px-3 text-[12px] font-medium text-white hover:bg-primary-hover transition-colors">
-                Apply fix as PR
-              </button>
-            </div>
-
-            <div className="rounded-xl border border-border bg-surface p-4">
-              <div className="text-[12px] font-semibold">Reviewers</div>
-              <div className="mt-3 space-y-2">
-                {[
-                  ["AC", "Alex Chen", "approved", "from-indigo-500 to-cyan-500"],
-                  ["SK", "Sarah Kim", "requested", "from-rose-500 to-orange-500"],
-                  ["MJ", "Marcus Johnson", "pending", "from-emerald-500 to-teal-500"],
-                ].map(([i, n, s, g]) => (
-                  <div key={n} className="flex items-center gap-2 text-[12.5px]">
-                    <span className={`grid h-6 w-6 place-items-center rounded-full bg-gradient-to-br ${g} text-[10px] font-semibold text-white`}>{i}</span>
-                    <span className="flex-1">{n}</span>
-                    <span className={`text-[11px] ${s === "approved" ? "text-success" : s === "requested" ? "text-warning" : "text-text-muted"}`}>{s}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </aside>
-        </div>
+            <section className="space-y-5">
+              {report ? (
+                <>
+                  <Group title="Breaking changes" tone="danger" Icon={AlertCircle} items={breaking} />
+                  <Group title="Warnings" tone="warning" Icon={AlertTriangle} items={warnings} />
+                  <Group title="Info" tone="info" Icon={Info} items={info} />
+                  {!changes.length && <div className="rounded-xl border border-success/30 bg-success/10 p-5 text-[13px] text-success">No changes detected — specs are identical.</div>}
+                </>
+              ) : (
+                <div className="text-text-secondary">Select a report</div>
+              )}
+            </section>
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );
 }
 
-type Line = { l: string; kind: "add" | "del" | "ctx" | "muted" };
-
-function ChangeGroup({
-  tone, title, count, items,
-}: {
-  tone: "danger" | "warning" | "success";
-  title: string;
-  count: number;
-  items: Array<{ title: string; desc: string; left: Line[]; right: Line[] }>;
-}) {
-  const map = {
-    danger: { dot: "bg-danger", text: "text-danger", ring: "ring-danger/30" },
-    warning: { dot: "bg-warning", text: "text-warning", ring: "ring-warning/30" },
-    success: { dot: "bg-success", text: "text-success", ring: "ring-success/30" },
+function Group({ title, tone, Icon, items }: { title: string; tone: "danger" | "warning" | "info"; Icon: any; items: any[] }) {
+  if (!items.length) return null;
+  const toneMap = {
+    danger: "border-danger/30 bg-danger/5 text-danger",
+    warning: "border-warning/30 bg-warning/5 text-warning",
+    info: "border-blue-500/30 bg-blue-500/5 text-blue-400",
   } as const;
   return (
-    <section>
-      <div className="flex items-center gap-2">
-        <span className={`h-2 w-2 rounded-full ${map[tone].dot}`} />
-        <h3 className={`text-[12px] font-semibold uppercase tracking-wider ${map[tone].text}`}>{title}</h3>
-        <span className="text-[11.5px] text-text-muted">({count})</span>
+    <div className="rounded-xl border border-border bg-surface overflow-hidden">
+      <div className={`flex items-center gap-2 border-b border-border px-4 py-2.5 ${toneMap[tone]}`}>
+        <Icon className="h-3.5 w-3.5" />
+        <span className="text-[12.5px] font-semibold">{title} · {items.length}</span>
       </div>
-      <div className="mt-3 space-y-3">
-        {items.map((it, i) => (
-          <div key={i} className="overflow-hidden rounded-xl border border-border bg-surface">
-            <div className="flex items-center justify-between border-b border-border px-4 py-2.5">
-              <div>
-                <div className="text-[13.5px] font-medium">{it.title}</div>
-                <code className="font-mono text-[12px] text-text-secondary">{it.desc}</code>
+      <ul className="divide-y divide-border">
+        {items.map((c, i) => (
+          <li key={i} className="px-4 py-3.5">
+            <div className="font-mono text-[12.5px] text-foreground">{c.path}</div>
+            <div className="mt-1 text-[13px] text-text-secondary">{c.message}</div>
+            {c.suggestion && (
+              <div className="mt-2 rounded-md border border-border bg-background px-2.5 py-1.5 text-[12px] text-text-secondary">
+                <span className="text-text-muted">Suggestion: </span>{c.suggestion}
               </div>
-            </div>
-            <div className="grid grid-cols-2 divide-x divide-border font-mono text-[12px] leading-6">
-              <DiffColumn lines={it.left} side="left" />
-              <DiffColumn lines={it.right} side="right" />
-            </div>
-          </div>
+            )}
+          </li>
         ))}
-      </div>
-    </section>
-  );
-}
-
-function DiffColumn({ lines, side }: { lines: Line[]; side: "left" | "right" }) {
-  return (
-    <div className="min-h-[3rem]">
-      {lines.map((ln, i) => {
-        const cls =
-          ln.kind === "del"
-            ? "bg-danger/10 text-rose-300"
-            : ln.kind === "add"
-            ? "bg-success/10 text-emerald-300"
-            : ln.kind === "muted"
-            ? "text-text-muted italic"
-            : "text-text-secondary";
-        const prefix = ln.kind === "del" ? "-" : ln.kind === "add" ? "+" : " ";
-        return (
-          <div key={i} className={`flex gap-2 px-4 ${cls}`}>
-            <span className="select-none w-3 text-text-muted">{prefix}</span>
-            <span>{ln.l}</span>
-          </div>
-        );
-      })}
+      </ul>
     </div>
   );
 }
