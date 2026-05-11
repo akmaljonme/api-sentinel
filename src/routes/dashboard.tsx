@@ -72,6 +72,22 @@ function DashboardBody() {
         <Stat icon={ShieldCheck} label="Workspace" value={profile?.role || "owner"} delta="Role" tone="success" />
       </div>
 
+      {!isEmpty && (
+        <div className="rounded-xl border border-border bg-surface p-5">
+          <div className="flex items-center justify-between mb-3">
+            <div>
+              <div className="text-[13px] font-semibold">Mock requests · last 7 days</div>
+              <div className="text-[11px] text-text-muted mt-0.5">Total: {series.reduce((a, b) => a + b, 0).toLocaleString()}</div>
+            </div>
+            <span className="rounded-md bg-success/15 px-2 py-0.5 text-[10px] font-semibold text-success uppercase">Live</span>
+          </div>
+          <Sparkline data={series.length ? series : [0, 0, 0, 0, 0, 0, 0]} height={80} />
+          <div className="mt-2 grid grid-cols-7 gap-1 text-center text-[10px] text-text-muted">
+            {["6d", "5d", "4d", "3d", "2d", "1d", "Today"].map((l) => <div key={l}>{l}</div>)}
+          </div>
+        </div>
+      )}
+
       {isEmpty ? (
         <EmptyState onUpload={openUpload} />
       ) : (
