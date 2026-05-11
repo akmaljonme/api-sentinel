@@ -95,6 +95,7 @@ export async function getMockRequestsByDay(orgId: string, days = 7) {
   const buckets = new Array(days).fill(0);
   const now = Date.now();
   for (const r of data || []) {
+    if (!r.created_at) continue;
     const ageDays = Math.floor((now - +new Date(r.created_at)) / 86400000);
     const idx = days - 1 - ageDays;
     if (idx >= 0 && idx < days) buckets[idx]++;
