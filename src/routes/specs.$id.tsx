@@ -39,7 +39,7 @@ function SpecPage() {
   const [loading, setLoading] = useState(true);
   const [active, setActive] = useState(0);
   const [q, setQ] = useState("");
-  const [tab, setTab] = useState<"Overview" | "Try it">("Overview");
+  const [tab, setTab] = useState<"Overview" | "Try it" | "Live">("Overview");
 
   useEffect(() => {
     setLoading(true);
