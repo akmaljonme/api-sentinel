@@ -2,6 +2,7 @@ import { ReactNode, createContext, useContext, useState } from "react";
 import { DashboardSidebar } from "./Sidebar";
 import { TopBar } from "./TopBar";
 import { UploadSpecDialog } from "./UploadSpecDialog";
+import { CommandPalette } from "./CommandPalette";
 import { useAuthGuard } from "@/lib/use-auth-guard";
 
 type Ctx = {
@@ -33,6 +34,7 @@ export function DashboardLayout({
           <div className="flex-1">{children}</div>
         </main>
         <UploadSpecDialog open={open} onOpenChange={setOpen} orgId={orgId} />
+        <CommandPalette onNewSpec={() => setOpen(true)} />
       </div>
     </LayoutCtx.Provider>
   );
