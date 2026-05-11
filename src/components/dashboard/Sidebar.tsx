@@ -5,10 +5,10 @@ import { useState } from "react";
 import { useSession } from "@/lib/use-session";
 import { signOut } from "@/lib/auth";
 
-const items = [
+const items: { to: string; label: string; Icon: any; exact?: boolean; match?: string }[] = [
   { to: "/dashboard", label: "Overview", Icon: Home, exact: true },
   { to: "/settings", label: "Settings", Icon: Settings, match: "/settings" },
-] as const;
+];
 
 export function DashboardSidebar() {
   const path = useRouterState({ select: (s) => s.location.pathname });
@@ -39,7 +39,7 @@ export function DashboardSidebar() {
       </div>
       <nav className="flex-1 p-3 space-y-0.5">
         {items.map((it) => {
-          const active = it.exact ? path === it.to : path.startsWith(it.match);
+          const active = it.exact ? path === it.to : !!it.match && path.startsWith(it.match);
           return (
             <Link
               key={it.label}
