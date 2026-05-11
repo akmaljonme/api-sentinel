@@ -1,5 +1,5 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { Home, FileCode2, GitCompare, Settings, ChevronsLeft, LogOut } from "lucide-react";
+import { Home, FileCode2, GitCompare, Settings, ChevronsLeft, LogOut, KeyRound } from "lucide-react";
 import { Logo } from "@/components/Logo";
 import { useState } from "react";
 import { useSession } from "@/lib/use-session";
@@ -7,10 +7,8 @@ import { signOut } from "@/lib/auth";
 
 const items = [
   { to: "/dashboard", label: "Overview", Icon: Home, exact: true },
-  { to: "/dashboard", label: "Specs", Icon: FileCode2, match: "/specs" },
-  { to: "/dashboard", label: "Drift Reports", Icon: GitCompare, match: "/drift" },
-  { to: "/dashboard", label: "Settings", Icon: Settings, match: "__never__" },
-];
+  { to: "/settings", label: "Settings", Icon: Settings, match: "/settings" },
+] as const;
 
 export function DashboardSidebar() {
   const path = useRouterState({ select: (s) => s.location.pathname });
@@ -40,11 +38,11 @@ export function DashboardSidebar() {
         </button>
       </div>
       <nav className="flex-1 p-3 space-y-0.5">
-        {items.map((it, i) => {
-          const active = it.exact ? path === it.to : it.match && path.startsWith(it.match);
+        {items.map((it) => {
+          const active = it.exact ? path === it.to : path.startsWith(it.match);
           return (
             <Link
-              key={i}
+              key={it.label}
               to={it.to}
               className={`group flex items-center gap-3 rounded-md px-2.5 h-9 text-[13px] font-medium transition-colors ${
                 active
@@ -57,6 +55,18 @@ export function DashboardSidebar() {
             </Link>
           );
         })}
+        {!collapsed && (
+          <div className="mt-5 px-2.5 text-[10px] uppercase tracking-wider text-text-muted">Resources</div>
+        )}
+        <a href="https://github.com" target="_blank" rel="noreferrer"
+          className="flex items-center gap-3 rounded-md px-2.5 h-9 text-[13px] font-medium text-text-secondary hover:bg-white/5 hover:text-foreground transition-colors">
+          <FileCode2 className="h-4 w-4" />
+          {!collapsed && <span>Docs</span>}
+        </a>
+        <Link to="/settings" className="flex items-center gap-3 rounded-md px-2.5 h-9 text-[13px] font-medium text-text-secondary hover:bg-white/5 hover:text-foreground transition-colors">
+          <KeyRound className="h-4 w-4" />
+          {!collapsed && <span>API Keys</span>}
+        </Link>
       </nav>
       <div className="border-t border-sidebar-border p-3 space-y-1">
         <div className="flex items-center gap-3 rounded-md p-2">
