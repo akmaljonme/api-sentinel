@@ -3,6 +3,7 @@ import { DashboardLayout } from "@/components/dashboard/Layout";
 import { Search, Copy, Play, Loader2, GitCompare } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { getSpec } from "@/lib/specs";
+import { LiveRequests } from "@/components/dashboard/LiveRequests";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/specs/$id")({
@@ -140,13 +141,13 @@ function SpecPage() {
               <p className="mt-2 text-[14px] text-text-secondary">{ep.summary || ep.description || "No description provided."}</p>
 
               <div className="mt-6 flex items-center gap-1 border-b border-border">
-                {(["Overview", "Try it"] as const).map((t) => (
+                {(["Overview", "Try it", "Live"] as const).map((t) => (
                   <button
                     key={t}
                     onClick={() => setTab(t)}
                     className={`relative h-9 px-3 text-[13px] transition-colors ${tab === t ? "text-foreground" : "text-text-secondary hover:text-foreground"}`}
                   >
-                    {t}
+                    {t === "Live" ? "Live stream" : t}
                     {tab === t && <span className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-primary" />}
                   </button>
                 ))}
@@ -155,10 +156,11 @@ function SpecPage() {
                 </Link>
               </div>
 
-              {tab === "Overview" ? (
-                <OverviewTab ep={ep} />
-              ) : (
-                <TryItTab ep={ep} mockServerId={mockServerId} />
+              {tab === "Overview" && <OverviewTab ep={ep} />}
+              {tab === "Try it" && <TryItTab ep={ep} mockServerId={mockServerId} />}
+              {tab === "Live" && (
+                mockServerId ? <div className="mt-6"><LiveRequests mockServerId={mockServerId} /></div>
+                  : <div className="mt-6 text-[13px] text-text-muted">No mock server provisioned yet.</div>
               )}
             </>
           ) : (
