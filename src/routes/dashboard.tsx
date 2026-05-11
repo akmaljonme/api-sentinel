@@ -4,6 +4,8 @@ import { FileCode2, Activity, AlertTriangle, ShieldCheck, Upload, Loader2, GitCo
 import { useEffect, useState } from "react";
 import { useSession } from "@/lib/use-session";
 import { getDashboardMetrics, getSpecs } from "@/lib/specs";
+import { getMockRequestsByDay } from "@/lib/team";
+import { Sparkline } from "@/components/dashboard/Sparkline";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({ meta: [{ title: "Dashboard — Flowt" }, { name: "description", content: "API spec overview and recent activity." }] }),
@@ -24,15 +26,21 @@ function DashboardBody() {
   const orgId = profile?.org_id ?? null;
   const [metrics, setMetrics] = useState<any>(null);
   const [specs, setSpecs] = useState<any[]>([]);
+  const [series, setSeries] = useState<number[]>([]);
   const [busy, setBusy] = useState(true);
 
   async function refresh() {
     if (!orgId) return;
     setBusy(true);
     try {
-      const [m, s] = await Promise.all([getDashboardMetrics(orgId), getSpecs(orgId)]);
+      const [m, s, days] = await Promise.all([
+        getDashboardMetrics(orgId),
+        getSpecs(orgId),
+        getMockRequestsByDay(orgId, 7),
+      ]);
       setMetrics(m);
       setSpecs(s);
+      setSeries(days.map((d) => d.count));
     } finally { setBusy(false); }
   }
 
