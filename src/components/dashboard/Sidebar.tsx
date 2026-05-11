@@ -43,7 +43,7 @@ export function DashboardSidebar() {
           return (
             <Link
               key={it.label}
-              to={it.to}
+              to={it.to as any}
               className={`group flex items-center gap-3 rounded-md px-2.5 h-9 text-[13px] font-medium transition-colors ${
                 active
                   ? "bg-primary/15 text-foreground shadow-[inset_0_0_0_1px_rgba(99,102,241,0.25)]"
