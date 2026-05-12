@@ -365,6 +365,15 @@ export type Database = {
     }
     Functions: {
       current_org_id: { Args: never; Returns: string }
+      ensure_user_workspace: {
+        Args: { _email?: string; _full_name?: string }
+        Returns: {
+          full_name: string
+          org_id: string
+          profile_id: string
+          role: string
+        }[]
+      }
     }
     Enums: {
       [_ in never]: never
