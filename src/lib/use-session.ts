@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
+import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import type { Session, User } from "@supabase/supabase-js";
+import { ensureWorkspace } from "./workspace.functions";
 
 export type ProfileRow = {
   id: string;
@@ -18,6 +20,7 @@ export type OrgRow = {
 };
 
 export function useSession() {
+  const ensureWorkspaceFn = useServerFn(ensureWorkspace);
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<ProfileRow | null>(null);
@@ -45,11 +48,19 @@ export function useSession() {
     if (!user) return;
     let cancelled = false;
     (async () => {
-      const { data: p } = await supabase
+      let { data: p } = await supabase
         .from("profiles")
         .select("id, org_id, full_name, avatar_url, role")
         .eq("id", user.id)
         .maybeSingle();
+      if (!p?.org_id) {
+        p = await ensureWorkspaceFn({
+          data: {
+            email: user.email,
+            fullName: user.user_metadata?.full_name || user.user_metadata?.name,
+          },
+        });
+      }
       if (cancelled) return;
       setProfile(p as ProfileRow | null);
       if (p?.org_id) {
@@ -62,7 +73,7 @@ export function useSession() {
       }
     })();
     return () => { cancelled = true; };
-  }, [user]);
+  }, [ensureWorkspaceFn, user]);
 
   return { session, user, profile, org, loading };
 }
