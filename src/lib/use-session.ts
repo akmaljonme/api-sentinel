@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
-import { useServerFn } from "@tanstack/react-start";
 import { supabase } from "@/integrations/supabase/client";
 import type { Session, User } from "@supabase/supabase-js";
-import { ensureWorkspace } from "./workspace.functions";
 
 export type ProfileRow = {
   id: string;
@@ -19,8 +17,44 @@ export type OrgRow = {
   plan: "free" | "pro" | "team";
 };
 
+async function ensureUserWorkspace(user: User, existing: ProfileRow | null) {
+  const displayName =
+    user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0] || "User";
+  const orgId = crypto.randomUUID();
+  const slugBase = displayName
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 40) || "workspace";
+
+  const { error: orgError } = await supabase.from("organizations").insert({
+    id: orgId,
+    name: `${displayName}'s workspace`,
+    slug: `${slugBase}-${user.id.slice(0, 8)}`,
+  });
+  if (orgError) throw orgError;
+
+  if (existing) {
+    const { data, error } = await supabase
+      .from("profiles")
+      .update({ org_id: orgId, full_name: existing.full_name || displayName, role: existing.role || "owner" })
+      .eq("id", user.id)
+      .select("id, org_id, full_name, avatar_url, role")
+      .single();
+    if (error) throw error;
+    return data as ProfileRow;
+  }
+
+  const { data, error } = await supabase
+    .from("profiles")
+    .insert({ id: user.id, org_id: orgId, full_name: displayName, role: "owner" })
+    .select("id, org_id, full_name, avatar_url, role")
+    .single();
+  if (error) throw error;
+  return data as ProfileRow;
+}
+
 export function useSession() {
-  const ensureWorkspaceFn = useServerFn(ensureWorkspace);
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<ProfileRow | null>(null);
@@ -54,12 +88,7 @@ export function useSession() {
         .eq("id", user.id)
         .maybeSingle();
       if (!p?.org_id) {
-        p = await ensureWorkspaceFn({
-          data: {
-            email: user.email,
-            fullName: user.user_metadata?.full_name || user.user_metadata?.name,
-          },
-        });
+        p = await ensureUserWorkspace(user, p as ProfileRow | null);
       }
       if (cancelled) return;
       setProfile(p as ProfileRow | null);
@@ -73,7 +102,7 @@ export function useSession() {
       }
     })();
     return () => { cancelled = true; };
-  }, [ensureWorkspaceFn, user]);
+  }, [user]);
 
   return { session, user, profile, org, loading };
 }
