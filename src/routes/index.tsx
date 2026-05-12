@@ -125,9 +125,12 @@ function Hero() {
             </div>
             <span className="text-[13px] text-text-secondary">Trusted by 2,400+ engineering teams at</span>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-x-10 gap-y-3 opacity-60">
+          <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-3">
             {["Stripe", "Vercel", "Linear", "Notion", "Figma", "Datadog"].map((l) => (
-              <span key={l} className="text-[15px] font-semibold tracking-tight text-text-secondary hover:text-foreground transition-colors cursor-default">
+              <span
+                key={l}
+                className="rounded-full border border-border/60 bg-surface/60 px-4 py-1.5 text-[13px] font-semibold tracking-tight text-foreground/80 backdrop-blur-sm transition-all hover:border-border hover:bg-surface hover:text-foreground"
+              >
                 {l}
               </span>
             ))}
