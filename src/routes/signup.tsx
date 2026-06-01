@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { signUpWithEmail, signInWithGoogle } from "@/lib/auth";
-import { AuthShell, Field, Divider, GoogleIcon } from "./login";
+import { signUpWithEmail } from "@/lib/auth";
+import { AuthShell, Field } from "./login";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -30,17 +30,9 @@ function SignupPage() {
     } finally { setBusy(false); }
   }
 
-  async function onGoogle() {
-    try { await signInWithGoogle(); } catch (e: any) { toast.error(e.message); }
-  }
-
   return <AuthShell title="Create your workspace" subtitle="Free forever for one spec. No credit card." footer={
     <>Already have an account? <Link to="/login" className="text-primary-hover hover:underline">Sign in</Link></>
   }>
-    <button onClick={onGoogle} className="flex h-10 w-full items-center justify-center gap-2 rounded-md border border-border bg-surface text-[14px] font-medium hover:border-border-hover transition-colors">
-      <GoogleIcon /> Continue with Google
-    </button>
-    <Divider />
     <form onSubmit={onSubmit} className="space-y-3">
       <Field label="Full name" type="text" value={name} onChange={setName} autoComplete="name" required />
       <Field label="Work email" type="email" value={email} onChange={setEmail} autoComplete="email" required />
