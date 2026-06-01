@@ -16,6 +16,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as SpecsIdRouteImport } from './routes/specs.$id'
 import { Route as DriftIdRouteImport } from './routes/drift.$id'
+import { Route as ApiPublicMockServerMockServerIdSplatRouteImport } from './routes/api/public/mock-server/$mockServerId/$'
 
 const SignupRoute = SignupRouteImport.update({
   id: '/signup',
@@ -52,6 +53,12 @@ const DriftIdRoute = DriftIdRouteImport.update({
   path: '/drift/$id',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ApiPublicMockServerMockServerIdSplatRoute =
+  ApiPublicMockServerMockServerIdSplatRouteImport.update({
+    id: '/api/public/mock-server/$mockServerId/$',
+    path: '/api/public/mock-server/$mockServerId/$',
+    getParentRoute: () => rootRouteImport,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -61,6 +68,7 @@ export interface FileRoutesByFullPath {
   '/signup': typeof SignupRoute
   '/drift/$id': typeof DriftIdRoute
   '/specs/$id': typeof SpecsIdRoute
+  '/api/public/mock-server/$mockServerId/$': typeof ApiPublicMockServerMockServerIdSplatRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
@@ -70,6 +78,7 @@ export interface FileRoutesByTo {
   '/signup': typeof SignupRoute
   '/drift/$id': typeof DriftIdRoute
   '/specs/$id': typeof SpecsIdRoute
+  '/api/public/mock-server/$mockServerId/$': typeof ApiPublicMockServerMockServerIdSplatRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -80,6 +89,7 @@ export interface FileRoutesById {
   '/signup': typeof SignupRoute
   '/drift/$id': typeof DriftIdRoute
   '/specs/$id': typeof SpecsIdRoute
+  '/api/public/mock-server/$mockServerId/$': typeof ApiPublicMockServerMockServerIdSplatRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -91,6 +101,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/drift/$id'
     | '/specs/$id'
+    | '/api/public/mock-server/$mockServerId/$'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
@@ -100,6 +111,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/drift/$id'
     | '/specs/$id'
+    | '/api/public/mock-server/$mockServerId/$'
   id:
     | '__root__'
     | '/'
@@ -109,6 +121,7 @@ export interface FileRouteTypes {
     | '/signup'
     | '/drift/$id'
     | '/specs/$id'
+    | '/api/public/mock-server/$mockServerId/$'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -119,6 +132,7 @@ export interface RootRouteChildren {
   SignupRoute: typeof SignupRoute
   DriftIdRoute: typeof DriftIdRoute
   SpecsIdRoute: typeof SpecsIdRoute
+  ApiPublicMockServerMockServerIdSplatRoute: typeof ApiPublicMockServerMockServerIdSplatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -172,6 +186,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DriftIdRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/api/public/mock-server/$mockServerId/$': {
+      id: '/api/public/mock-server/$mockServerId/$'
+      path: '/api/public/mock-server/$mockServerId/$'
+      fullPath: '/api/public/mock-server/$mockServerId/$'
+      preLoaderRoute: typeof ApiPublicMockServerMockServerIdSplatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -183,16 +204,9 @@ const rootRouteChildren: RootRouteChildren = {
   SignupRoute: SignupRoute,
   DriftIdRoute: DriftIdRoute,
   SpecsIdRoute: SpecsIdRoute,
+  ApiPublicMockServerMockServerIdSplatRoute:
+    ApiPublicMockServerMockServerIdSplatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { createStart } from '@tanstack/react-start'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-  }
-}
