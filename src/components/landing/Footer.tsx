@@ -20,7 +20,7 @@ export function Footer() {
             </p>
             <div className="mt-6 flex items-center gap-2">
               {[Github, Twitter, Linkedin].map((Icon, i) => (
-                <a key={i} href="#" className="grid h-9 w-9 place-items-center rounded-md border border-border text-text-secondary hover:text-foreground hover:border-border-hover transition-colors">
+                <a key={i} href="/signup" className="grid h-9 w-9 place-items-center rounded-md border border-border text-text-secondary hover:text-foreground hover:border-border-hover transition-colors">
                   <Icon className="h-4 w-4" />
                 </a>
               ))}
@@ -32,7 +32,7 @@ export function Footer() {
               <ul className="mt-4 space-y-3 text-sm">
                 {c.links.map((l) => (
                   <li key={l}>
-                    <a href="#" className="text-text-secondary hover:text-foreground transition-colors">{l}</a>
+                    <a href="/signup" className="text-text-secondary hover:text-foreground transition-colors">{l}</a>
                   </li>
                 ))}
               </ul>
