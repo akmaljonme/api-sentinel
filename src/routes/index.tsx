@@ -202,7 +202,7 @@ function FeatureMock() {
             ))}
           </ul>
           <div className="mt-6 rounded-lg border border-border bg-surface p-3 font-mono text-[12.5px]">
-            <div className="text-text-muted mb-1.5">$ curl /api/public/mock-server/{serverId}/users/42</div>
+            <div className="text-text-muted mb-1.5">$ curl /api/public/mock-server/{`{serverId}`}/users/42</div>
             <div className="text-emerald-300">{`{ "id": 42, "email": "ada@lovelace.dev", "plan": "pro" }`}</div>
           </div>
         </div>
@@ -223,7 +223,7 @@ function MockServerVisual() {
             </span>
             <div>
               <div className="text-[13px] font-medium">payments-api · mock</div>
-              <div className="font-mono text-[11px] text-text-muted">/api/public/mock-server/{serverId}</div>
+              <div className="font-mono text-[11px] text-text-muted">/api/public/mock-server/{`{serverId}`}</div>
             </div>
           </div>
           <span className="rounded-md bg-success/15 px-2 py-1 text-[11px] font-medium text-success">Live</span>
