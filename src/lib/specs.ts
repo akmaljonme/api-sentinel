@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { compareOpenApiSpecs, parseOpenApiSpec } from "@/lib/openapi";
 
 export type Spec = {
   id: string;
@@ -15,19 +16,22 @@ export type Spec = {
 
 export async function uploadSpec(file: File | { name: string; content: string }, orgId: string) {
   const content = "content" in file ? file.content : await file.text();
-  const name = file.name;
+  const parsed_data = parseOpenApiSpec(content);
+  const name = parsed_data.title || file.name;
 
   const { data: spec, error } = await supabase
     .from("specs")
-    .insert({ org_id: orgId, content, name })
+    .insert({
+      org_id: orgId,
+      content,
+      name,
+      parsed_data,
+      version: parsed_data.version,
+      endpoint_count: parsed_data.endpoints.length,
+    })
     .select()
     .single();
   if (error) throw error;
-
-  const { data: parsed, error: parseErr } = await supabase.functions.invoke("parse-spec", {
-    body: { spec_id: spec.id },
-  });
-  if (parseErr) throw parseErr;
 
   await supabase.from("mock_servers").insert({
     spec_id: spec.id,
@@ -35,7 +39,7 @@ export async function uploadSpec(file: File | { name: string; content: string },
     status: "running",
   });
 
-  return { spec, parsed_data: parsed?.parsed_data };
+  return { spec, parsed_data };
 }
 
 export async function getSpecs(orgId: string) {
@@ -60,17 +64,39 @@ export async function getSpec(specId: string) {
 }
 
 export async function runDriftCheck(specId: string, newContent: string) {
-  const { data: spec } = await supabase.from("specs").select("content").eq("id", specId).single();
-  const { data, error } = await supabase.functions.invoke("detect-drift", {
-    body: { spec_id: specId, old_content: spec?.content, new_content: newContent },
-  });
-  if (error) throw error;
-  await supabase.from("specs")
-    .update({ content: newContent, updated_at: new Date().toISOString() })
+  const { data: spec, error: specError } = await supabase
+    .from("specs")
+    .select("content")
+    .eq("id", specId)
+    .single();
+  if (specError) throw specError;
+
+  const result = compareOpenApiSpecs(spec.content, newContent);
+  const { data: report, error: reportError } = await supabase.from("drift_reports").insert({
+    spec_id: specId,
+    old_version: result.oldVersion,
+    new_version: result.newVersion,
+    old_content: spec.content,
+    new_content: newContent,
+    breaking_count: result.breaking,
+    warning_count: result.warnings,
+    info_count: result.info,
+    changes: result.changes,
+  }).select().single();
+  if (reportError) throw reportError;
+
+  const { error: updateError } = await supabase.from("specs")
+    .update({
+      content: newContent,
+      parsed_data: result.parsedData,
+      version: result.newVersion,
+      name: result.parsedData.title,
+      endpoint_count: result.parsedData.endpoints.length,
+      updated_at: new Date().toISOString(),
+    })
     .eq("id", specId);
-  // Re-parse new content
-  await supabase.functions.invoke("parse-spec", { body: { spec_id: specId } });
-  return data;
+  if (updateError) throw updateError;
+  return { report, changes: result.changes, breaking: result.breaking, warnings: result.warnings, info: result.info };
 }
 
 export async function getDriftReports(specId: string) {
