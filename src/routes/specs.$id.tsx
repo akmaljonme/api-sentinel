@@ -11,8 +11,7 @@ export const Route = createFileRoute("/specs/$id")({
   component: SpecPage,
 });
 
-const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL as string;
-const SUPABASE_KEY = import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY as string;
+const MOCK_BASE_URL = typeof window === "undefined" ? "" : window.location.origin;
 
 type Endpoint = {
   method: string;
@@ -181,10 +180,10 @@ function SpecPage() {
                   <div className="text-[10px] uppercase tracking-wider text-text-muted">Base URL</div>
                   <div className="mt-1 flex items-center gap-1.5">
                     <code className="font-mono text-[11px] text-foreground break-all flex-1">
-                      {SUPABASE_URL}/functions/v1/mock-server/{mockServerId}
+                      {MOCK_BASE_URL}/api/public/mock-server/{mockServerId}
                     </code>
                     <button
-                      onClick={() => navigator.clipboard.writeText(`${SUPABASE_URL}/functions/v1/mock-server/${mockServerId}`)}
+                      onClick={() => navigator.clipboard.writeText(`${MOCK_BASE_URL}/api/public/mock-server/${mockServerId}`)}
                       className="grid h-6 w-6 place-items-center rounded border border-border text-text-secondary hover:text-foreground"
                     >
                       <Copy className="h-3 w-3" />
@@ -192,7 +191,7 @@ function SpecPage() {
                   </div>
                 </div>
                 <div className="text-[10.5px] text-text-muted">
-                  Tip: pass the Supabase apikey header — your anon key is auto-included from the Try it tab.
+                  Public mock URL. Requests are logged into this workspace in real time.
                 </div>
               </>
             ) : (
@@ -265,17 +264,13 @@ function TryItTab({ ep, mockServerId }: { ep: Endpoint; mockServerId?: string })
     });
     const qs = new URLSearchParams();
     queryParams.forEach((p: any) => { if (params[p.name]) qs.set(p.name, params[p.name]); });
-    const url = `${SUPABASE_URL}/functions/v1/mock-server/${mockServerId}${path}${qs.toString() ? `?${qs}` : ""}`;
+    const url = `${MOCK_BASE_URL}/api/public/mock-server/${mockServerId}${path}${qs.toString() ? `?${qs}` : ""}`;
     setBusy(true);
     const start = performance.now();
     try {
       const res = await fetch(url, {
         method: ep.method,
-        headers: {
-          "Content-Type": "application/json",
-          apikey: SUPABASE_KEY,
-          Authorization: `Bearer ${SUPABASE_KEY}`,
-        },
+        headers: { "Content-Type": "application/json" },
         body: body && ep.method !== "GET" && ep.method !== "DELETE" ? body : undefined,
       });
       const text = await res.text();
