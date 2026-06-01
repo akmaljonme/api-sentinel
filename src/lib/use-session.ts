@@ -17,6 +17,8 @@ export type OrgRow = {
   plan: "free" | "pro" | "team";
 };
 
+const workspacePromises = new Map<string, Promise<ProfileRow>>();
+
 async function ensureUserWorkspace(user: User, existing: ProfileRow | null) {
   const displayName =
     user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0] || "User";
@@ -54,6 +56,14 @@ async function ensureUserWorkspace(user: User, existing: ProfileRow | null) {
   return data as ProfileRow;
 }
 
+function getOrCreateWorkspace(user: User, existing: ProfileRow | null) {
+  const current = workspacePromises.get(user.id);
+  if (current) return current;
+  const promise = ensureUserWorkspace(user, existing).finally(() => workspacePromises.delete(user.id));
+  workspacePromises.set(user.id, promise);
+  return promise;
+}
+
 export function useSession() {
   const [session, setSession] = useState<Session | null>(null);
   const [user, setUser] = useState<User | null>(null);
@@ -63,17 +73,19 @@ export function useSession() {
 
   useEffect(() => {
     const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
+      setLoading(!!s);
       setSession(s);
       setUser(s?.user ?? null);
       if (!s) {
         setProfile(null);
         setOrg(null);
+        setLoading(false);
       }
     });
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
       setUser(data.session?.user ?? null);
-      setLoading(false);
+      if (!data.session) setLoading(false);
     });
     return () => sub.subscription.unsubscribe();
   }, []);
@@ -82,23 +94,30 @@ export function useSession() {
     if (!user) return;
     let cancelled = false;
     (async () => {
-      let { data: p } = await supabase
-        .from("profiles")
-        .select("id, org_id, full_name, avatar_url, role")
-        .eq("id", user.id)
-        .maybeSingle();
-      if (!p?.org_id) {
-        p = await ensureUserWorkspace(user, p as ProfileRow | null);
-      }
-      if (cancelled) return;
-      setProfile(p as ProfileRow | null);
-      if (p?.org_id) {
-        const { data: o } = await supabase
-          .from("organizations")
-          .select("id, name, slug, plan")
-          .eq("id", p.org_id)
+      setLoading(true);
+      try {
+        let { data: p, error: profileError } = await supabase
+          .from("profiles")
+          .select("id, org_id, full_name, avatar_url, role")
+          .eq("id", user.id)
           .maybeSingle();
-        if (!cancelled) setOrg(o as OrgRow | null);
+        if (profileError) throw profileError;
+        if (!p?.org_id) {
+          p = await getOrCreateWorkspace(user, p as ProfileRow | null);
+        }
+        if (cancelled) return;
+        setProfile(p as ProfileRow | null);
+        if (p?.org_id) {
+          const { data: o, error: orgError } = await supabase
+            .from("organizations")
+            .select("id, name, slug, plan")
+            .eq("id", p.org_id)
+            .maybeSingle();
+          if (orgError) throw orgError;
+          if (!cancelled) setOrg(o as OrgRow | null);
+        }
+      } finally {
+        if (!cancelled) setLoading(false);
       }
     })();
     return () => { cancelled = true; };

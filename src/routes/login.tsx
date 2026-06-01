@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Logo } from "@/components/Logo";
 import { useState } from "react";
-import { signInWithEmail, signInWithGoogle } from "@/lib/auth";
+import { signInWithEmail } from "@/lib/auth";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -27,17 +27,9 @@ function LoginPage() {
     } finally { setBusy(false); }
   }
 
-  async function onGoogle() {
-    try { await signInWithGoogle(); } catch (e: any) { toast.error(e.message); }
-  }
-
   return <AuthShell title="Welcome back" subtitle="Sign in to your Flowt workspace." footer={
     <>Don't have an account? <Link to="/signup" className="text-primary-hover hover:underline">Sign up</Link></>
   }>
-    <button onClick={onGoogle} className="flex h-10 w-full items-center justify-center gap-2 rounded-md border border-border bg-surface text-[14px] font-medium hover:border-border-hover transition-colors">
-      <GoogleIcon /> Continue with Google
-    </button>
-    <Divider />
     <form onSubmit={onSubmit} className="space-y-3">
       <Field label="Email" type="email" value={email} onChange={setEmail} autoComplete="email" required />
       <Field label="Password" type="password" value={password} onChange={setPassword} autoComplete="current-password" required />

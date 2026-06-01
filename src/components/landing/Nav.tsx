@@ -22,7 +22,7 @@ export function Nav() {
           <Logo />
           <nav className="hidden md:flex items-center gap-1 text-sm text-text-secondary">
             {["Product", "Docs", "Pricing", "Changelog"].map((l) => (
-              <a key={l} href="#" className="rounded-md px-3 py-1.5 hover:text-foreground hover:bg-white/5 transition-colors">
+              <a key={l} href="/signup" className="rounded-md px-3 py-1.5 hover:text-foreground hover:bg-white/5 transition-colors">
                 {l}
               </a>
             ))}

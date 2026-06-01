@@ -9,7 +9,7 @@ export function HeroMockup() {
           <span className="h-2.5 w-2.5 rounded-full bg-[#FEBC2E]" />
           <span className="h-2.5 w-2.5 rounded-full bg-[#28C840]" />
           <div className="ml-4 flex items-center gap-2 text-xs text-text-muted font-mono">
-            <span>specsync.app/dashboard/payments-api</span>
+            <span>flowt.app/dashboard/payments-api</span>
           </div>
         </div>
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_1fr] divide-y lg:divide-y-0 lg:divide-x divide-border">

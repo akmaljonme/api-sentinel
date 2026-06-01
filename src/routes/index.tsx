@@ -1,50 +1,9 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { Nav } from "@/components/landing/Nav";
 import { Footer } from "@/components/landing/Footer";
 import { HeroMockup } from "@/components/landing/HeroMockup";
-import { ArrowRight, Check, Sparkles, Github, Slack, Webhook, ShieldCheck, Zap, GitPullRequest, ChevronDown, Loader2 } from "lucide-react";
-import { useEffect, useState } from "react";
-import { joinWaitlist } from "@/lib/waitlist";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "sonner";
-
-function WaitlistForm() {
-  const [email, setEmail] = useState("");
-  const [busy, setBusy] = useState(false);
-  const [count, setCount] = useState<number | null>(null);
-
-  useEffect(() => {
-    supabase.from("waitlist").select("id", { count: "exact", head: true })
-      .then(({ count }) => setCount(count));
-  }, []);
-
-  async function onSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    setBusy(true);
-    const r = await joinWaitlist(email);
-    setBusy(false);
-    if (r.ok) { toast.success(r.message); setEmail(""); setCount((c) => (c ?? 0) + 1); }
-    else toast.error(r.message);
-  }
-
-  return (
-    <div className="mx-auto max-w-md">
-      <form onSubmit={onSubmit} className="flex gap-2">
-        <input
-          type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
-          placeholder="you@company.com"
-          className="h-12 flex-1 rounded-lg border border-border bg-surface/80 px-4 text-[14px] text-foreground placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-primary"
-        />
-        <button disabled={busy} className="inline-flex h-12 items-center gap-2 rounded-lg bg-primary px-5 text-[14px] font-medium text-white hover:bg-primary-hover disabled:opacity-60 transition-colors">
-          {busy ? <Loader2 className="h-4 w-4 animate-spin" /> : <>Join waitlist <ArrowRight className="h-4 w-4" /></>}
-        </button>
-      </form>
-      {count !== null && count > 0 && (
-        <p className="mt-3 text-[12.5px] text-text-muted">Join {count.toLocaleString()}+ developers already on the list</p>
-      )}
-    </div>
-  );
-}
+import { ArrowRight, Check, Sparkles, Github, Slack, Webhook, ShieldCheck, Zap, GitPullRequest, ChevronDown } from "lucide-react";
+import { useState } from "react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -89,7 +48,7 @@ function Hero() {
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
           </span>
           <Sparkles className="h-3 w-3 text-primary-hover" />
-          Now in public beta — 2,400 teams joined this week
+          Public beta — real workspaces, real mock servers
           <ArrowRight className="h-3 w-3" />
         </div>
 
@@ -105,7 +64,14 @@ function Hero() {
         </p>
 
         <div className="mt-9 animate-fade-up" style={{ animationDelay: "180ms" }}>
-          <WaitlistForm />
+          <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
+            <Link to="/signup" className="inline-flex h-12 items-center gap-2 rounded-lg bg-primary px-5 text-[14px] font-medium text-white hover:bg-primary-hover transition-colors">
+              Start with a real workspace <ArrowRight className="h-4 w-4" />
+            </Link>
+            <Link to="/login" className="inline-flex h-12 items-center gap-2 rounded-lg border border-border bg-surface/80 px-5 text-[14px] font-medium text-foreground hover:border-border-hover transition-colors">
+              Sign in
+            </Link>
+          </div>
         </div>
 
         <div className="mt-10 flex flex-col items-center gap-4 animate-fade-up" style={{ animationDelay: "240ms" }}>
@@ -123,7 +89,7 @@ function Hero() {
                 </span>
               ))}
             </div>
-            <span className="text-[13px] text-text-secondary">Trusted by 2,400+ engineering teams at</span>
+            <span className="text-[13px] text-text-secondary">Built for API teams using tools like</span>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-3">
             {["Stripe", "Vercel", "Linear", "Notion", "Figma", "Datadog"].map((l) => (
@@ -236,7 +202,7 @@ function FeatureMock() {
             ))}
           </ul>
           <div className="mt-6 rounded-lg border border-border bg-surface p-3 font-mono text-[12.5px]">
-            <div className="text-text-muted mb-1.5">$ curl mock.specsync.app/payments-api/users/42</div>
+            <div className="text-text-muted mb-1.5">$ curl /api/public/mock-server/{`{serverId}`}/users/42</div>
             <div className="text-emerald-300">{`{ "id": 42, "email": "ada@lovelace.dev", "plan": "pro" }`}</div>
           </div>
         </div>
@@ -257,7 +223,7 @@ function MockServerVisual() {
             </span>
             <div>
               <div className="text-[13px] font-medium">payments-api · mock</div>
-              <div className="font-mono text-[11px] text-text-muted">mock.specsync.app/payments-api</div>
+              <div className="font-mono text-[11px] text-text-muted">/api/public/mock-server/{`{serverId}`}</div>
             </div>
           </div>
           <span className="rounded-md bg-success/15 px-2 py-1 text-[11px] font-medium text-success">Live</span>
@@ -319,15 +285,15 @@ function FeatureDrift() {
             Breaking changes flagged <span className="text-gradient">before they merge</span>
           </h3>
           <p className="mt-4 text-[16px] text-text-secondary">
-            SpecSync diffs every PR against your last released contract. Breaking changes
-            block the merge. Safe additions ship freely.
+            Flowt compares every uploaded contract against your current spec. Breaking changes
+            are stored as real drift reports. Safe additions ship freely.
           </p>
           <div className="mt-6 rounded-xl border border-border bg-surface overflow-hidden">
             <div className="flex items-center gap-2 border-b border-border px-3 py-2 text-[12px] text-text-secondary">
               <span className="grid h-5 w-5 place-items-center rounded-full bg-white/10">
                 <svg viewBox="0 0 16 16" className="h-3 w-3 fill-current"><path d="M8 0a8 8 0 0 0-2.5 15.6c.4.1.5-.2.5-.4v-1.4c-2.2.5-2.7-1-2.7-1-.3-.9-.8-1.1-.8-1.1-.7-.5.1-.5.1-.5.8.1 1.2.8 1.2.8.7 1.2 1.9.9 2.4.7 0-.5.3-.9.5-1.1-1.8-.2-3.6-.9-3.6-4 0-.9.3-1.6.8-2.2-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.2.8.6-.2 1.3-.3 2-.3.7 0 1.4.1 2 .3 1.5-1 2.2-.8 2.2-.8.5 1.1.2 1.9.1 2.1.5.6.8 1.3.8 2.2 0 3.1-1.9 3.8-3.6 4 .3.2.5.7.5 1.4v2.1c0 .2.1.5.5.4A8 8 0 0 0 8 0z"/></svg>
               </span>
-              <span className="font-medium text-foreground">specsync</span>
+              <span className="font-medium text-foreground">flowt</span>
               <span>commented on PR #1042 · just now</span>
             </div>
             <div className="p-4 space-y-3 text-[13px]">
@@ -406,17 +372,17 @@ function FeatureCI() {
         <div className="rounded-2xl border border-border bg-surface overflow-hidden">
           <div className="flex items-center gap-2 border-b border-border px-4 py-2.5 text-[12px] text-text-secondary">
             <Github className="h-3.5 w-3.5" />
-            <span className="font-mono">.github/workflows/specsync.yml</span>
+            <span className="font-mono">.github/workflows/flowt.yml</span>
           </div>
           <pre className="p-5 font-mono text-[12.5px] leading-6 text-text-secondary whitespace-pre overflow-x-auto">
 {`name: API Contract Check
 on: [pull_request]
 
 jobs:
-  specsync:
+  flowt:
     runs-on: ubuntu-latest
     steps:
-      - uses: `}<span className="text-cyan-300">specsync/action@v1</span>{`
+      - run: `}<span className="text-cyan-300">curl -X POST https://your-app/api/public/drift</span>{`
         with:
           spec: `}<span className="text-emerald-300">./openapi.yaml</span>{`
           token: `}<span className="text-amber-300">{`\${{ secrets.SPECSYNC_TOKEN }}`}</span>{`
@@ -430,8 +396,8 @@ jobs:
             One line in your pipeline. <span className="text-gradient">Zero surprises.</span>
           </h3>
           <p className="mt-4 text-[16px] text-text-secondary">
-            Drop SpecSync into GitHub Actions, GitLab CI, CircleCI, or Buildkite.
-            Block PRs with breaking changes. Get rich reports in your favorite Slack channel.
+            Use Flowt in GitHub Actions, GitLab CI, CircleCI, or Buildkite.
+            Compare uploaded contracts and keep rich reports in your workspace.
           </p>
           <div className="mt-6 grid grid-cols-3 gap-3">
             {[
@@ -454,9 +420,9 @@ jobs:
 function Stats() {
   const stats = [
     ["4 sec", "Average mock spin-up"],
-    ["2,400+", "Engineering teams"],
+    ["Real", "Workspace auth"],
     ["99.97%", "Uptime SLA"],
-    ["847K", "Drift alerts caught"],
+    ["Live", "Request stream"],
   ];
   return (
     <section className="relative border-t border-border py-24">
@@ -477,7 +443,7 @@ function Stats() {
 
 function Testimonials() {
   const ts = [
-    { i: "AC", n: "Alex Chen", r: "CTO @ Linear", g: "from-indigo-500 to-cyan-500", q: "We caught 3 breaking changes the week we installed SpecSync. Our customers never knew." },
+    { i: "AC", n: "Alex Chen", r: "CTO @ Linear", g: "from-indigo-500 to-cyan-500", q: "We caught breaking changes before the frontend team shipped against the wrong contract." },
     { i: "SK", n: "Sarah Kim", r: "Staff Eng @ Stripe", g: "from-rose-500 to-orange-500", q: "Finally a contract testing tool that doesn't feel like 2014. The Linear-grade UX makes it actually fun." },
     { i: "MJ", n: "Marcus Johnson", r: "Frontend Lead @ Vercel", g: "from-emerald-500 to-teal-500", q: "Mock servers in 4 seconds is not marketing copy — we measured. Unblocked our team in week one." },
   ];
@@ -587,9 +553,9 @@ function Pricing() {
 
 function FAQ() {
   const qs = [
-    ["Do I need to write any tests?", "No. SpecSync derives everything from your OpenAPI spec. Just point us at the YAML or JSON file."],
+    ["Do I need to write any tests?", "No. Flowt derives endpoints, mock responses, and drift reports from your OpenAPI YAML or JSON file."],
     ["Which spec formats are supported?", "OpenAPI 3.0, 3.1, Swagger 2.0, and GraphQL SDL. Postman collections import on the Pro plan."],
-    ["Can I self-host SpecSync?", "Yes. Team and Enterprise plans include a self-hosted option for VPC, on-prem, and air-gapped environments."],
+    ["Can I use Flowt with private APIs?", "Yes. Upload specs from private repos or CI; mock servers and reports stay scoped to your workspace."],
     ["How does drift detection work?", "Every commit compares the new spec against the last released contract. Breaking changes are blocked; safe changes pass."],
     ["What languages do mock clients support?", "TypeScript, Python, Go, Ruby, PHP, Rust, Java, Kotlin, Swift, and C#. Generated SDKs ship with full types."],
     ["Is there a free tier?", "Yes — forever free for one spec, one mock server, and 10K requests per month. No credit card required."],
@@ -637,12 +603,12 @@ function CTA() {
             </h2>
             <p className="mx-auto mt-3 max-w-md text-text-secondary">Start free in 30 seconds. No credit card. Cancel anytime.</p>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
-              <a href="#" className="inline-flex h-11 items-center gap-2 rounded-lg bg-primary px-5 text-[14px] font-medium text-white hover:bg-primary-hover transition-colors">
+              <Link to="/signup" className="inline-flex h-11 items-center gap-2 rounded-lg bg-primary px-5 text-[14px] font-medium text-white hover:bg-primary-hover transition-colors">
                 Start free <ArrowRight className="h-4 w-4" />
-              </a>
-              <a href="#" className="inline-flex h-11 items-center gap-2 rounded-lg border border-border bg-surface/50 px-5 text-[14px] font-medium text-foreground hover:border-border-hover transition-colors">
-                Talk to sales
-              </a>
+              </Link>
+              <Link to="/login" className="inline-flex h-11 items-center gap-2 rounded-lg border border-border bg-surface/50 px-5 text-[14px] font-medium text-foreground hover:border-border-hover transition-colors">
+                Open dashboard
+              </Link>
             </div>
           </div>
         </div>

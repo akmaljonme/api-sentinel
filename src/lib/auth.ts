@@ -20,11 +20,14 @@ export async function signInWithEmail(email: string, password: string) {
 }
 
 export async function signInWithGoogle() {
+  throw new Error("Google sign-in is not enabled yet. Please use email and password.");
+  /*
   const { error } = await supabase.auth.signInWithOAuth({
     provider: "google",
     options: { redirectTo: `${window.location.origin}/dashboard` },
   });
   if (error) throw error;
+  */
 }
 
 export async function signOut() {
