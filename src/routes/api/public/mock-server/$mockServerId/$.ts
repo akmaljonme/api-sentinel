@@ -40,7 +40,7 @@ async function handleMockRequest({ request, params }: { request: Request; params
   const endpoints = ((mockServer as any).specs?.parsed_data?.endpoints || []) as any[];
   const matched = endpoints.find((endpoint) => {
     if (endpoint.method !== method) return false;
-    const pattern = `^${String(endpoint.path).replace(/\{[^}]+\}/g, "[^/"]+")}$`;
+    const pattern = `^${escapeRegex(String(endpoint.path)).replace(/\\\{[^}]+\\\}/g, "[^/]+")}$`;
     return new RegExp(pattern).test(apiPath);
   });
 
@@ -93,4 +93,8 @@ function jsonResponse(body: unknown, status: number, startedAt: number) {
     status,
     headers: responseHeaders(Date.now() - startedAt),
   });
+}
+
+function escapeRegex(value: string) {
+  return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
