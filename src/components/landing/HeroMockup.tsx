@@ -49,18 +49,18 @@ paths:
           <div className="bg-surface p-5">
             <div className="flex items-center justify-between">
               <div>
-                <div className="text-[11px] uppercase tracking-wider text-text-muted">Drift report</div>
+                <div className="text-[11px] uppercase tracking-wider text-text-muted">Drift hisoboti</div>
                 <div className="mt-1 text-sm font-semibold">payments-api · v1.9 → v2.0</div>
               </div>
-              <span className="rounded-md bg-danger/15 px-2 py-1 text-[11px] font-medium text-danger">3 breaking</span>
+              <span className="rounded-md bg-danger/15 px-2 py-1 text-[11px] font-medium text-danger">3 sinovchi</span>
             </div>
             <div className="mt-4 space-y-2">
               {[
-                { sev: "danger", t: "Endpoint removed", d: "DELETE /users/{id}" },
-                { sev: "danger", t: "Required field added", d: "POST /orders → customer_id" },
-                { sev: "warning", t: "Type changed", d: "GET /products → price (int → float)" },
-                { sev: "success", t: "Optional field added", d: "GET /users → avatar_url" },
-                { sev: "success", t: "New endpoint", d: "GET /users/{id}/preferences" },
+                { sev: "danger", t: "Uch o'chirildi", d: "DELETE /users/{id}" },
+                { sev: "danger", t: "Talab qilingan maydon qo'shildi", d: "POST /orders → customer_id" },
+                { sev: "warning", t: "Tip o'zgardi", d: "GET /products → price (int → float)" },
+                { sev: "success", t: "Ixtiyoriy maydon qo'shildi", d: "GET /users → avatar_url" },
+                { sev: "success", t: "Yangi uch", d: "GET /users/{id}/preferences" },
               ].map((it, i) => {
                 const map: Record<string, string> = { danger: "bg-danger", warning: "bg-warning", success: "bg-success" };
                 return (
@@ -83,7 +83,7 @@ paths:
           <span className="h-2 w-2 rounded-full bg-danger animate-pulse-dot" />
         </span>
         <div>
-          <div className="text-[13px] font-medium">Breaking change detected</div>
+          <div className="text-[13px] font-medium">Sinovchi o'zgarish aniqlandi</div>
           <div className="font-mono text-[11px] text-text-secondary">DELETE /users/{`{id}`} · payments-api</div>
         </div>
       </div>
