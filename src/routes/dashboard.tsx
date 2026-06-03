@@ -8,7 +8,7 @@ import { getMockRequestsByDay } from "@/lib/team";
 import { Sparkline } from "@/components/dashboard/Sparkline";
 
 export const Route = createFileRoute("/dashboard")({
-  head: () => ({ meta: [{ title: "Dashboard — Flowt" }, { name: "description", content: "API spec overview and recent activity." }] }),
+  head: () => ({ meta: [{ title: "Boshqaruv paneli — Flowt" }, { name: "description", content: "API spec umumiy ko'rinishi va so'nggi faoliyat." }] }),
   component: Dashboard,
 });
 
@@ -50,40 +50,40 @@ function DashboardBody() {
     return <div className="grid place-items-center py-32 text-text-secondary"><Loader2 className="h-5 w-5 animate-spin" /></div>;
   }
 
-  const name = profile?.full_name?.split(" ")[0] || user?.email?.split("@")[0] || "there";
+  const name = profile?.full_name?.split(" ")[0] || user?.email?.split("@")[0] || "do'stim";
   const isEmpty = !specs.length;
 
   return (
     <div className="mx-auto max-w-7xl p-6 lg:p-8 space-y-6">
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-[24px] font-semibold tracking-tight">Welcome back, {name}</h1>
-          <p className="mt-1 text-[13px] text-text-secondary">Live across your APIs in real time.</p>
+          <h1 className="text-[24px] font-semibold tracking-tight">Xush kelibsiz, {name}</h1>
+          <p className="mt-1 text-[13px] text-text-secondary">APIlaringiz jonli ravishda kuzatilmoqda.</p>
         </div>
         <button onClick={openUpload} className="inline-flex h-9 items-center gap-1.5 rounded-md bg-primary px-3.5 text-[13px] font-medium text-white hover:bg-primary-hover">
-          <Plus className="h-3.5 w-3.5" /> New spec
+          <Plus className="h-3.5 w-3.5" /> Yangi spec
         </button>
       </div>
 
       <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-        <Stat icon={FileCode2} label="Active specs" value={String(metrics?.specCount ?? 0)} delta={`${specs.length} loaded`} tone="primary" />
-        <Stat icon={Activity} label="Mock requests (24h)" value={(metrics?.mockRequestsToday ?? 0).toLocaleString()} delta="Live mock traffic" tone="success" />
-        <Stat icon={AlertTriangle} label="Breaking drift (7d)" value={String(metrics?.breakingAlertsThisWeek ?? 0)} delta="Auto-detected" tone={metrics?.breakingAlertsThisWeek ? "danger" : "success"} />
-        <Stat icon={ShieldCheck} label="Workspace" value={profile?.role || "owner"} delta="Role" tone="success" />
+        <Stat icon={FileCode2} label="Faol specslar" value={String(metrics?.specCount ?? 0)} delta={`${specs.length} yuklangan`} tone="primary" />
+        <Stat icon={Activity} label="Mock so'rovlar (24 soat)" value={(metrics?.mockRequestsToday ?? 0).toLocaleString()} delta="Jonli mock trafik" tone="success" />
+        <Stat icon={AlertTriangle} label="Sinovchi drift (7 kun)" value={String(metrics?.breakingAlertsThisWeek ?? 0)} delta="Avto-aniqlangan" tone={metrics?.breakingAlertsThisWeek ? "danger" : "success"} />
+        <Stat icon={ShieldCheck} label="Ish joyi" value={profile?.role || "owner"} delta="Rol" tone="success" />
       </div>
 
       {!isEmpty && (
         <div className="rounded-xl border border-border bg-surface p-5">
           <div className="flex items-center justify-between mb-3">
             <div>
-              <div className="text-[13px] font-semibold">Mock requests · last 7 days</div>
-              <div className="text-[11px] text-text-muted mt-0.5">Total: {series.reduce((a, b) => a + b, 0).toLocaleString()}</div>
+              <div className="text-[13px] font-semibold">Mock so'rovlar · so'nggi 7 kun</div>
+              <div className="text-[11px] text-text-muted mt-0.5">Jami: {series.reduce((a, b) => a + b, 0).toLocaleString()}</div>
             </div>
-            <span className="rounded-md bg-success/15 px-2 py-0.5 text-[10px] font-semibold text-success uppercase">Live</span>
+            <span className="rounded-md bg-success/15 px-2 py-0.5 text-[10px] font-semibold text-success uppercase">Jonli</span>
           </div>
           <Sparkline data={series.length ? series : [0, 0, 0, 0, 0, 0, 0]} height={80} />
           <div className="mt-2 grid grid-cols-7 gap-1 text-center text-[10px] text-text-muted">
-            {["6d", "5d", "4d", "3d", "2d", "1d", "Today"].map((l) => <div key={l}>{l}</div>)}
+            {["6 kun", "5 kun", "4 kun", "3 kun", "2 kun", "1 kun", "Bugun"].map((l) => <div key={l}>{l}</div>)}
           </div>
         </div>
       )}
@@ -126,12 +126,12 @@ function EmptyState({ onUpload }: { onUpload: () => void }) {
       <div className="mx-auto grid h-12 w-12 place-items-center rounded-xl bg-primary/15 text-primary-hover">
         <Upload className="h-5 w-5" />
       </div>
-      <h2 className="mt-4 text-[18px] font-semibold">Upload your first OpenAPI spec</h2>
+      <h2 className="mt-4 text-[18px] font-semibold">Birinchi OpenAPI specingizni yuklang</h2>
       <p className="mt-1.5 text-[13px] text-text-secondary max-w-md mx-auto">
-        Drop a YAML or JSON file. Flowt parses your endpoints, spins up a live mock server, and starts watching for breaking changes.
+        YAML yoki JSON faylni tashlang. Flowt uchlar tahlil qiladi, jonli mock server ishga tushiradi va sinovchi o'zgarishlarni kuzatadi.
       </p>
       <button onClick={onUpload} className="mt-6 inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-[13px] font-medium text-white hover:bg-primary-hover">
-        <Plus className="h-4 w-4" /> Upload spec
+        <Plus className="h-4 w-4" /> Spec yuklash
       </button>
     </div>
   );
@@ -141,7 +141,7 @@ function ActivityFeed({ events }: { events: any[] }) {
   if (!events.length) return null;
   return (
     <div className="rounded-xl border border-border bg-surface">
-      <div className="border-b border-border px-5 py-3.5 text-[14px] font-semibold">Recent drift activity</div>
+      <div className="border-b border-border px-5 py-3.5 text-[14px] font-semibold">So'nggi drift faoliyati</div>
       <ol className="px-5 py-4 divide-y divide-border">
         {events.map((e) => (
           <li key={e.id} className="flex items-start gap-4 py-3">
@@ -154,7 +154,7 @@ function ActivityFeed({ events }: { events: any[] }) {
                 <span className="text-[11px] text-text-muted">{new Date(e.created_at).toLocaleString()}</span>
               </div>
               <div className="mt-0.5 text-[12.5px] text-text-secondary">
-                {e.breaking_count || 0} breaking · {e.warning_count || 0} warnings · {e.info_count || 0} info
+                {e.breaking_count || 0} sinovchi · {e.warning_count || 0} ogohlantirish · {e.info_count || 0} ma'lumot
               </div>
             </div>
           </li>
@@ -168,17 +168,17 @@ function SpecsTable({ specs }: { specs: any[] }) {
   return (
     <div className="rounded-xl border border-border bg-surface overflow-hidden">
       <div className="flex items-center justify-between border-b border-border px-5 py-3.5">
-        <div className="text-[14px] font-semibold">Your specs</div>
-        <span className="text-[12px] text-text-muted">{specs.length} total</span>
+        <div className="text-[14px] font-semibold">Sizning specslaringiz</div>
+        <span className="text-[12px] text-text-muted">{specs.length} jami</span>
       </div>
       <table className="w-full text-[13px]">
         <thead className="text-[11px] uppercase tracking-wider text-text-muted">
           <tr>
             <th className="px-5 py-2.5 text-left font-medium">Spec</th>
-            <th className="px-5 py-2.5 text-left font-medium">Version</th>
-            <th className="px-5 py-2.5 text-left font-medium">Endpoints</th>
-            <th className="px-5 py-2.5 text-left font-medium">Mock requests</th>
-            <th className="px-5 py-2.5 text-left font-medium">Status</th>
+            <th className="px-5 py-2.5 text-left font-medium">Versiya</th>
+            <th className="px-5 py-2.5 text-left font-medium">Uchlar</th>
+            <th className="px-5 py-2.5 text-left font-medium">Mock so'rovlar</th>
+            <th className="px-5 py-2.5 text-left font-medium">Holat</th>
             <th className="px-5 py-2.5"></th>
           </tr>
         </thead>
@@ -196,7 +196,7 @@ function SpecsTable({ specs }: { specs: any[] }) {
                 <td className="px-5 py-3 text-text-secondary">{s.endpoint_count}</td>
                 <td className="px-5 py-3 font-mono text-text-secondary">{reqCount.toLocaleString()}</td>
                 <td className="px-5 py-3">
-                  {breaking ? <Badge tone="danger">Breaking drift</Badge> : <Badge tone="success">Healthy</Badge>}
+                  {breaking ? <Badge tone="danger">Sinovchi drift</Badge> : <Badge tone="success">Sog'lom</Badge>}
                 </td>
                 <td className="px-5 py-3 text-right">
                   <Link to="/drift/$id" params={{ id: s.id }} className="inline-flex items-center gap-1 text-[12px] text-text-secondary hover:text-foreground">

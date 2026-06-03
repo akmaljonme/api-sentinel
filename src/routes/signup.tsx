@@ -6,7 +6,7 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/signup")({
-  head: () => ({ meta: [{ title: "Create account — Flowt" }, { name: "description", content: "Create your Flowt account." }] }),
+  head: () => ({ meta: [{ title: "Hisob yaratish — Flowt" }, { name: "description", content: "Flowt hisobingizni yarating." }] }),
   component: SignupPage,
 });
 
@@ -19,28 +19,28 @@ function SignupPage() {
 
   async function onSubmit(e: React.FormEvent) {
     e.preventDefault();
-    if (password.length < 8) return toast.error("Password must be at least 8 characters.");
+    if (password.length < 8) return toast.error("Parol kamida 8 ta belgidan iborat bo'lishi kerak.");
     setBusy(true);
     try {
       await signUpWithEmail(email, password, name);
-      toast.success("Account created — welcome to Flowt!");
+      toast.success("Hisob yaratildi — Flowtga xush kelibsiz!");
       nav({ to: "/dashboard" });
     } catch (err: any) {
-      toast.error(err.message || "Could not create account");
+      toast.error(err.message || "Hisob yaratib bo'lmadi");
     } finally { setBusy(false); }
   }
 
-  return <AuthShell title="Create your workspace" subtitle="Free forever for one spec. No credit card." footer={
-    <>Already have an account? <Link to="/login" className="text-primary-hover hover:underline">Sign in</Link></>
+  return <AuthShell title="Ish joyingizni yarating" subtitle="Bitta spec uchun doimo bepul. Kredit karta shart emas." footer={
+    <>Hisobingiz bormi? <Link to="/login" className="text-primary-hover hover:underline">Kirish</Link></>
   }>
     <form onSubmit={onSubmit} className="space-y-3">
-      <Field label="Full name" type="text" value={name} onChange={setName} autoComplete="name" required />
-      <Field label="Work email" type="email" value={email} onChange={setEmail} autoComplete="email" required />
-      <Field label="Password (min 8 chars)" type="password" value={password} onChange={setPassword} autoComplete="new-password" required />
+      <Field label="To'liq ism" type="text" value={name} onChange={setName} autoComplete="name" required />
+      <Field label="Elektron pochta" type="email" value={email} onChange={setEmail} autoComplete="email" required />
+      <Field label="Parol (kamida 8 ta belgi)" type="password" value={password} onChange={setPassword} autoComplete="new-password" required />
       <button disabled={busy} className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md bg-primary text-[14px] font-medium text-white hover:bg-primary-hover disabled:opacity-60 transition-colors">
-        {busy && <Loader2 className="h-4 w-4 animate-spin" />} Create account
+        {busy && <Loader2 className="h-4 w-4 animate-spin" />} Hisob yaratish
       </button>
     </form>
-    <p className="text-center text-[11px] text-text-muted">By signing up you agree to our Terms and Privacy Policy.</p>
+    <p className="text-center text-[11px] text-text-muted">Ro'yxatdan o'tish orqali siz Foydalanish shartlari va Maxfiylik siyosatiga rozilik bildirasiz.</p>
   </AuthShell>;
 }

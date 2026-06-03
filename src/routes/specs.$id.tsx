@@ -7,7 +7,7 @@ import { LiveRequests } from "@/components/dashboard/LiveRequests";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/specs/$id")({
-  head: ({ params }) => ({ meta: [{ title: `Spec viewer — Flowt` }, { name: "description", content: "OpenAPI spec viewer with live mock preview." }] }),
+  head: ({ params }) => ({ meta: [{ title: `Spec ko'rish — Flowt` }, { name: "description", content: "OpenAPI spec ko'rish va jonli mock ko'rish." }] }),
   component: SpecPage,
 });
 
@@ -65,21 +65,21 @@ function SpecPage() {
 
   if (loading) {
     return (
-      <DashboardLayout crumbs={["Dashboard", "Specs"]} action={false}>
+      <DashboardLayout crumbs={["Boshqaruv paneli", "Specslar"]} action={false}>
         <div className="grid place-items-center py-32 text-text-secondary"><Loader2 className="h-5 w-5 animate-spin" /></div>
       </DashboardLayout>
     );
   }
   if (!spec) {
     return (
-      <DashboardLayout crumbs={["Dashboard", "Specs"]} action={false}>
-        <div className="grid place-items-center py-32 text-text-secondary">Spec not found</div>
+      <DashboardLayout crumbs={["Boshqaruv paneli", "Specslar"]} action={false}>
+        <div className="grid place-items-center py-32 text-text-secondary">Spec topilmadi</div>
       </DashboardLayout>
     );
   }
 
   return (
-    <DashboardLayout crumbs={["Dashboard", "Specs", spec.name]} action={false}>
+    <DashboardLayout crumbs={["Boshqaruv paneli", "Specslar", spec.name]} action={false}>
       <div className="grid grid-cols-1 lg:grid-cols-[260px_1fr_360px] min-h-[calc(100vh-56px)]">
         {/* LEFT */}
         <aside className="border-r border-border bg-surface/50">
@@ -89,7 +89,7 @@ function SpecPage() {
               <input
                 value={q}
                 onChange={(e) => setQ(e.target.value)}
-                placeholder="Search endpoints"
+                placeholder="Uchlarni qidirish"
                 className="w-full bg-transparent placeholder:text-text-muted focus:outline-none"
               />
             </div>
@@ -123,7 +123,7 @@ function SpecPage() {
                 </div>
               ))}
               {!endpoints.length && (
-                <div className="text-[12px] text-text-muted px-1">No endpoints parsed yet.</div>
+                <div className="text-[12px] text-text-muted px-1">Hali uchlar tahlil qilinmadi.</div>
               )}
             </div>
           </div>
@@ -137,7 +137,7 @@ function SpecPage() {
                 <span className={`inline-flex h-7 px-2.5 items-center rounded-md font-mono text-[12px] font-semibold ${methodColors[ep.method]}`}>{ep.method}</span>
                 <code className="font-mono text-[16px] text-foreground break-all">{ep.path}</code>
               </div>
-              <p className="mt-2 text-[14px] text-text-secondary">{ep.summary || ep.description || "No description provided."}</p>
+              <p className="mt-2 text-[14px] text-text-secondary">{ep.summary || ep.description || "Tavsif berilmagan."}</p>
 
               <div className="mt-6 flex items-center gap-1 border-b border-border">
                 {(["Overview", "Try it", "Live"] as const).map((t) => (
@@ -146,12 +146,12 @@ function SpecPage() {
                     onClick={() => setTab(t)}
                     className={`relative h-9 px-3 text-[13px] transition-colors ${tab === t ? "text-foreground" : "text-text-secondary hover:text-foreground"}`}
                   >
-                    {t === "Live" ? "Live stream" : t}
+                    {t === "Live" ? "Jonli oqim" : t === "Try it" ? "Sinab ko'rish" : "Umumiy ko'rinish"}
                     {tab === t && <span className="absolute inset-x-2 -bottom-px h-0.5 rounded-full bg-primary" />}
                   </button>
                 ))}
                 <Link to="/drift/$id" params={{ id: spec.id }} className="ml-auto inline-flex items-center gap-1.5 text-[12px] text-text-secondary hover:text-foreground">
-                  <GitCompare className="h-3.5 w-3.5" /> Drift reports
+                  <GitCompare className="h-3.5 w-3.5" /> Drift hisobotlari
                 </Link>
               </div>
 
@@ -159,11 +159,11 @@ function SpecPage() {
               {tab === "Try it" && <TryItTab ep={ep} mockServerId={mockServerId} />}
               {tab === "Live" && (
                 mockServerId ? <div className="mt-6"><LiveRequests mockServerId={mockServerId} /></div>
-                  : <div className="mt-6 text-[13px] text-text-muted">No mock server provisioned yet.</div>
+                  : <div className="mt-6 text-[13px] text-text-muted">Mock server hali tayyorlanmadi.</div>
               )}
             </>
           ) : (
-            <div className="grid place-items-center py-32 text-text-secondary">Select an endpoint</div>
+            <div className="grid place-items-center py-32 text-text-secondary">Uchni tanlang</div>
           )}
         </section>
 
@@ -171,13 +171,13 @@ function SpecPage() {
         <aside className="border-l border-border bg-surface/50">
           <div className="sticky top-14 p-4 space-y-4">
             <div>
-              <div className="text-[12px] font-semibold">Live mock server</div>
-              <div className="mt-1 text-[10.5px] text-text-muted">Send real HTTP requests to a schema-generated endpoint.</div>
+              <div className="text-[12px] font-semibold">Jonli mock server</div>
+              <div className="mt-1 text-[10.5px] text-text-muted">Schema asosida yaratilgan uchga haqiqiy HTTP so'rovlar yuboring.</div>
             </div>
             {mockServerId ? (
               <>
                 <div className="rounded-lg border border-border bg-background p-2.5">
-                  <div className="text-[10px] uppercase tracking-wider text-text-muted">Base URL</div>
+                  <div className="text-[10px] uppercase tracking-wider text-text-muted">Asosiy URL</div>
                   <div className="mt-1 flex items-center gap-1.5">
                     <code className="font-mono text-[11px] text-foreground break-all flex-1">
                       {MOCK_BASE_URL}/api/public/mock-server/{mockServerId}
@@ -191,11 +191,11 @@ function SpecPage() {
                   </div>
                 </div>
                 <div className="text-[10.5px] text-text-muted">
-                  Public mock URL. Requests are logged into this workspace in real time.
+                  Ommaviy mock URL. So'rovlar jonli ravishda bu ish joyiga kiritiladi.
                 </div>
               </>
             ) : (
-              <div className="text-[12px] text-text-muted">Mock server not yet provisioned.</div>
+              <div className="text-[12px] text-text-muted">Mock server hali tayyorlanmadi.</div>
             )}
           </div>
         </aside>
@@ -213,24 +213,24 @@ function OverviewTab({ ep }: { ep: Endpoint }) {
   return (
     <div className="mt-6 space-y-6">
       {params.length > 0 && (
-        <Section title="Parameters">
+        <Section title="Parametrlar">
           <SchemaTable
             rows={params.map((p: any) => [p.name, p.schema?.type || "string", !!p.required, p.description || `${p.in} parameter`])}
           />
         </Section>
       )}
       {reqSchema && (
-        <Section title="Request body">
+        <Section title="So'rov tanasi">
           <SchemaTable rows={schemaToRows(reqSchema)} />
         </Section>
       )}
       {respSchema && (
-        <Section title={`Response · ${okCode}`}>
+        <Section title={`Javob · ${okCode}`}>
           <SchemaTable rows={schemaToRows(respSchema)} />
         </Section>
       )}
       {!params.length && !reqSchema && !respSchema && (
-        <div className="text-[13px] text-text-secondary">This endpoint has no documented parameters or schema.</div>
+        <div className="text-[13px] text-text-secondary">Bu uch hujjatlashtirilgan parametrlar yoki schemaga ega emas.</div>
       )}
     </div>
   );
@@ -257,7 +257,7 @@ function TryItTab({ ep, mockServerId }: { ep: Endpoint; mockServerId?: string })
   }, [ep]);
 
   async function send() {
-    if (!mockServerId) return toast.error("No mock server");
+    if (!mockServerId) return toast.error("Mock server yo'q");
     let path = ep.path;
     pathParams.forEach((p: any) => {
       path = path.replaceAll(`{${p.name}}`, encodeURIComponent(params[p.name] || `sample_${p.name}`));
@@ -284,21 +284,21 @@ function TryItTab({ ep, mockServerId }: { ep: Endpoint; mockServerId?: string })
   return (
     <div className="mt-6 space-y-5">
       {pathParams.length > 0 && (
-        <Section title="Path parameters">
+        <Section title="Yo'l parametrlari">
           {pathParams.map((p: any) => (
             <ParamInput key={p.name} p={p} value={params[p.name] || ""} onChange={(v) => setParams({ ...params, [p.name]: v })} />
           ))}
         </Section>
       )}
       {queryParams.length > 0 && (
-        <Section title="Query parameters">
+        <Section title="So'rov parametrlari">
           {queryParams.map((p: any) => (
             <ParamInput key={p.name} p={p} value={params[p.name] || ""} onChange={(v) => setParams({ ...params, [p.name]: v })} />
           ))}
         </Section>
       )}
       {ep.requestBody && (
-        <Section title="Request body (JSON)">
+        <Section title="So'rov tanasi (JSON)">
           <textarea value={body} onChange={(e) => setBody(e.target.value)} spellCheck={false}
             className="block w-full h-44 rounded-md border border-border bg-background p-3 font-mono text-[12px] text-text-secondary focus:outline-none focus:ring-2 focus:ring-primary resize-none"
           />
@@ -311,7 +311,7 @@ function TryItTab({ ep, mockServerId }: { ep: Endpoint; mockServerId?: string })
         className="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-4 text-[13px] font-medium text-white hover:bg-primary-hover disabled:opacity-60"
       >
         {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Play className="h-3.5 w-3.5" />}
-        Send to mock server
+        Mock serverga yuborish
       </button>
 
       {resp && (
@@ -319,7 +319,7 @@ function TryItTab({ ep, mockServerId }: { ep: Endpoint; mockServerId?: string })
           <div className="flex items-center gap-3 border-b border-border px-3.5 py-2 text-[12px]">
             <span className={`inline-flex h-5 px-2 items-center rounded font-mono text-[11px] font-semibold ${resp.status < 300 ? "bg-success/15 text-success" : resp.status < 500 ? "bg-warning/15 text-warning" : "bg-danger/15 text-danger"}`}>{resp.status}</span>
             <span className="text-text-muted font-mono">{resp.ms}ms</span>
-            <span className="ml-auto text-text-muted">Live response from your mock server</span>
+            <span className="ml-auto text-text-muted">Mock serverdan jonli javob</span>
           </div>
           <pre className="p-4 font-mono text-[12px] leading-6 text-text-secondary overflow-x-auto">{typeof resp.body === "string" ? resp.body : JSON.stringify(resp.body, null, 2)}</pre>
         </div>
@@ -335,7 +335,7 @@ function ParamInput({ p, value, onChange }: { p: any; value: string; onChange: (
         <div className="font-mono text-[12.5px]">{p.name}{p.required && <span className="text-danger">*</span>}</div>
         <div className="text-[10.5px] text-text-muted">{p.schema?.type || "string"}</div>
       </div>
-      <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={p.description || `Enter ${p.name}`}
+      <input value={value} onChange={(e) => onChange(e.target.value)} placeholder={p.description || `${p.name} ni kiriting`}
         className="block h-9 rounded-md border border-border bg-background px-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-primary"
       />
     </div>

@@ -2,10 +2,10 @@ import { Logo } from "@/components/Logo";
 import { Github, Twitter, Linkedin } from "lucide-react";
 
 const cols = [
-  { title: "Product", links: ["Mock Servers", "Drift Detection", "CI/CD", "Integrations", "Changelog"] },
-  { title: "Company", links: ["About", "Customers", "Careers", "Blog", "Contact"] },
-  { title: "Legal", links: ["Privacy", "Terms", "Security", "DPA", "Subprocessors"] },
-  { title: "Developers", links: ["Docs", "API Reference", "Status", "Open Source", "Community"] },
+  { title: "Mahsulot", links: ["Mock Serverlar", "Drift Detection", "CI/CD", "Integratsiyalar", "Yangiliklar"] },
+  { title: "Kompaniya", links: ["Biz haqimizda", "Mijozlar", "Karyera", "Blog", "Aloqa"] },
+  { title: "Huquqiy", links: ["Maxfiylik", "Shartlar", "Xavfsizlik", "DPA", "Subprotsessorlar"] },
+  { title: "Dasturchilar", links: ["Hujjatlar", "API ma'lumotnoma", "Holat", "Ochiq kod", "Jamiyat"] },
 ];
 
 export function Footer() {
@@ -16,7 +16,7 @@ export function Footer() {
           <div className="md:col-span-2">
             <Logo />
             <p className="mt-4 max-w-xs text-sm text-text-secondary">
-              API flows that never break production. Mock, test, and ship with confidence.
+              Production'ni hech qachon buzmaydigan API oqimlari. Mock, test va ishonch bilan jo'nating.
             </p>
             <div className="mt-6 flex items-center gap-2">
               {[Github, Twitter, Linkedin].map((Icon, i) => (
@@ -46,7 +46,7 @@ export function Footer() {
               <span className="h-1.5 w-1.5 rounded-full bg-success" /> SOC2 Type II
             </span>
             <span className="inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1 text-xs text-text-secondary">
-              <span className="h-1.5 w-1.5 rounded-full bg-success" /> GDPR Compliant
+              <span className="h-1.5 w-1.5 rounded-full bg-success" /> GDPR Mos
             </span>
           </div>
         </div>

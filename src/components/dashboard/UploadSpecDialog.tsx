@@ -56,9 +56,9 @@ export function UploadSpecDialog({
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-2xl border-border bg-surface">
         <DialogHeader>
-          <DialogTitle className="text-[18px]">Upload OpenAPI spec</DialogTitle>
+          <DialogTitle className="text-[18px]">OpenAPI spec yuklash</DialogTitle>
           <DialogDescription className="text-text-secondary">
-            Paste YAML/JSON or drop a file. We'll parse endpoints, spin up a mock server, and watch for drift.
+            YAML/JSON ni qo'yish yoki fayl tashlang. Uchlar tahlil qilinadi, mock server ishga tushiriladi va drift kuzatiladi.
           </DialogDescription>
         </DialogHeader>
 
@@ -66,13 +66,13 @@ export function UploadSpecDialog({
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="Spec name (auto-detected from spec)"
+            placeholder="Spec nomi (avtomatik aniqlanadi)"
             className="block h-10 w-full rounded-md border border-border bg-background px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-primary"
           />
 
           <label className="flex flex-col items-center justify-center gap-2 rounded-md border border-dashed border-border bg-background/40 py-8 cursor-pointer hover:border-primary/50 transition-colors">
             <Upload className="h-5 w-5 text-text-secondary" />
-            <span className="text-[13px] text-text-secondary">Click to upload .yaml / .yml / .json</span>
+            <span className="text-[13px] text-text-secondary">Yuklash uchun bosing .yaml / .yml / .json</span>
             <input
               type="file"
               accept=".yaml,.yml,.json,application/json,text/yaml"
@@ -86,7 +86,7 @@ export function UploadSpecDialog({
               value={content}
               onChange={(e) => setContent(e.target.value)}
               spellCheck={false}
-              placeholder="…or paste spec contents here"
+              placeholder="…yoki spec matnini shu yerga qo'ying"
               className="block w-full h-56 rounded-md border border-border bg-background p-3 font-mono text-[12px] text-text-secondary focus:outline-none focus:ring-2 focus:ring-primary resize-none"
             />
             <button
@@ -94,7 +94,7 @@ export function UploadSpecDialog({
               onClick={loadSample}
               className="absolute top-2 right-2 inline-flex items-center gap-1.5 rounded-md border border-border bg-surface px-2 py-1 text-[11px] text-text-secondary hover:text-foreground hover:border-border-hover"
             >
-              <FileCode2 className="h-3 w-3" /> Load sample
+              <FileCode2 className="h-3 w-3" /> Namuna yuklash
             </button>
           </div>
         </div>
@@ -104,7 +104,7 @@ export function UploadSpecDialog({
             onClick={() => onOpenChange(false)}
             className="h-9 rounded-md border border-border bg-surface px-3 text-[13px] hover:border-border-hover"
           >
-            Cancel
+            Bekor qilish
           </button>
           <button
             disabled={busy}
@@ -112,7 +112,7 @@ export function UploadSpecDialog({
             className="inline-flex h-9 items-center gap-2 rounded-md bg-primary px-3 text-[13px] font-medium text-white hover:bg-primary-hover disabled:opacity-60"
           >
             {busy && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
-            Upload spec
+            Spec yuklash
           </button>
         </div>
       </DialogContent>
