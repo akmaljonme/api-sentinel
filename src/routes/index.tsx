@@ -564,7 +564,7 @@ function FAQ() {
   return (
     <section className="border-t border-border py-32">
       <div className="mx-auto max-w-3xl px-6">
-        <h2 className="text-center text-[36px] sm:text-[44px] font-bold tracking-tight">Questions, answered.</h2>
+        <h2 className="text-center text-[36px] sm:text-[44px] font-bold tracking-tight">Savollar va javoblar.</h2>
         <div className="mt-12 divide-y divide-border rounded-2xl border border-border bg-surface">
           {qs.map(([q, a], i) => {
             const on = open === i;
