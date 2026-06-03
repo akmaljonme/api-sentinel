@@ -599,15 +599,15 @@ function CTA() {
           <div className="absolute inset-0 bg-noise opacity-50" />
           <div className="relative">
             <h2 className="text-[36px] sm:text-[44px] font-bold tracking-tight">
-              Ship APIs that <span className="text-gradient">never break</span>
+              <span className="text-gradient">Hech qachon buzilmaydigan</span> API'larni jo'nating
             </h2>
-            <p className="mx-auto mt-3 max-w-md text-text-secondary">Start free in 30 seconds. No credit card. Cancel anytime.</p>
+            <p className="mx-auto mt-3 max-w-md text-text-secondary">30 soniyada bepul boshlang. Kredit karta shart emas. Istalgan vaqtda bekor qiling.</p>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link to="/signup" className="inline-flex h-11 items-center gap-2 rounded-lg bg-primary px-5 text-[14px] font-medium text-white hover:bg-primary-hover transition-colors">
-                Start free <ArrowRight className="h-4 w-4" />
+                Bepul boshlash <ArrowRight className="h-4 w-4" />
               </Link>
               <Link to="/login" className="inline-flex h-11 items-center gap-2 rounded-lg border border-border bg-surface/50 px-5 text-[14px] font-medium text-foreground hover:border-border-hover transition-colors">
-                Open dashboard
+                Boshqaruv panelini ochish
               </Link>
             </div>
           </div>
