@@ -8,10 +8,10 @@ import { useState } from "react";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Flowt — API flows that never break production" },
-      { name: "description", content: "The API contract testing platform. Instant mock servers, drift detection, and CI/CD alerts." },
-      { property: "og:title", content: "Flowt — API flows that never break production" },
-      { property: "og:description", content: "Instant mock servers. Drift detection. CI/CD alerts." },
+      { title: "Flowt — API oqimlari hech qachon production'ni buzmaydi" },
+      { name: "description", content: "API contract testing platformasi. Jonli mock serverlar, drift detection va CI/CD ogohlantirishlar." },
+      { property: "og:title", content: "Flowt — API oqimlari hech qachon production'ni buzmaydi" },
+      { property: "og:description", content: "Jonli mock serverlar. Drift detection. CI/CD ogohlantirishlar." },
     ],
   }),
   component: Landing,
@@ -48,28 +48,28 @@ function Hero() {
             <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-primary" />
           </span>
           <Sparkles className="h-3 w-3 text-primary-hover" />
-          Public beta — real workspaces, real mock servers
+          Ommaviy beta — haqiqiy ish joylari, haqiqiy mock serverlar
           <ArrowRight className="h-3 w-3" />
         </div>
 
         <h1 className="mx-auto mt-7 max-w-4xl text-[44px] sm:text-[60px] lg:text-[72px] font-bold leading-[1.05] tracking-[-0.02em] animate-fade-up" style={{ animationDelay: "60ms" }}>
-          API flows that
+          API oqimlari
           <br />
-          <span className="text-gradient">never break production</span>
+          <span className="text-gradient">hech qachon production'ni buzmaydi</span>
         </h1>
 
         <p className="mx-auto mt-6 max-w-2xl text-[18px] sm:text-[20px] leading-[1.6] text-text-secondary animate-fade-up" style={{ animationDelay: "120ms" }}>
-          Flowt catches breaking API changes before they reach your users.
-          Mock servers in seconds. Drift alerts in CI/CD.
+          Flowt sinovchi API o'zgarishlarini foydalanuvchilaringizgacha yetishdan oldin ushlaydi.
+          Soniyalarda mock serverlar. CI/CD da drift ogohlantirishlari.
         </p>
 
         <div className="mt-9 animate-fade-up" style={{ animationDelay: "180ms" }}>
           <div className="flex flex-col items-center justify-center gap-3 sm:flex-row">
             <Link to="/signup" className="inline-flex h-12 items-center gap-2 rounded-lg bg-primary px-5 text-[14px] font-medium text-white hover:bg-primary-hover transition-colors">
-              Start with a real workspace <ArrowRight className="h-4 w-4" />
+              Haqiqiy ish joyi bilan boshlash <ArrowRight className="h-4 w-4" />
             </Link>
             <Link to="/login" className="inline-flex h-12 items-center gap-2 rounded-lg border border-border bg-surface/80 px-5 text-[14px] font-medium text-foreground hover:border-border-hover transition-colors">
-              Sign in
+              Kirish
             </Link>
           </div>
         </div>
@@ -89,7 +89,7 @@ function Hero() {
                 </span>
               ))}
             </div>
-            <span className="text-[13px] text-text-secondary">Built for API teams using tools like</span>
+            <span className="text-[13px] text-text-secondary">API jamoalari uchun quyidagi vositlarni ishlatib yaratildi</span>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-x-3 gap-y-3">
             {["Stripe", "Vercel", "Linear", "Notion", "Figma", "Datadog"].map((l) => (
@@ -111,24 +111,24 @@ function Hero() {
 
 function ProblemSolution() {
   const probs = [
-    "Frontend blocked waiting for backend API",
-    "Breaking changes discovered in production",
-    "Manual Postman collections, always outdated",
+    "Frontend backend API kutib to'silgan",
+    "Sinovchi o'zgarishlar production'da aniqlandi",
+    "Qo'lda Postman to'plamlari, doimo eskirgan",
   ];
   const sols = [
-    "Instant mock server from any OpenAPI spec",
-    "Drift detection catches changes before merge",
-    "Auto-synced from GitHub, always fresh",
+    "Har qanday OpenAPI spec dan on the fly mock server",
+    "Drift detection o'zgarishlarni merge'dan oldin ushlaydi",
+    "GitHub dan avto-sinxron, doimo yangi",
   ];
   return (
     <section className="relative py-32 border-t border-border">
       <div className="mx-auto max-w-7xl px-6">
         <div className="text-center">
-          <span className="text-[12px] font-medium uppercase tracking-wider text-primary-hover">The problem</span>
+          <span className="text-[12px] font-medium uppercase tracking-wider text-primary-hover">Muammo</span>
           <h2 className="mx-auto mt-3 max-w-3xl text-[36px] sm:text-[48px] font-bold tracking-tight">
-            Every team ships broken APIs.
+            Har bir jamoa buzilgan API jo'natadi.
             <br />
-            <span className="text-gradient">Until now.</span>
+            <span className="text-gradient">Hozirgacha.</span>
           </h2>
         </div>
         <div className="mt-16 grid gap-6 lg:grid-cols-[1fr_auto_1fr]">
@@ -181,17 +181,17 @@ function FeatureMock() {
         <div className="order-1 lg:order-2 max-w-lg">
           <SectionTag><Zap className="h-3 w-3" /> Mock Server</SectionTag>
           <h3 className="mt-4 text-[32px] sm:text-[40px] font-bold tracking-tight leading-[1.1]">
-            From spec to running mock in <span className="text-gradient">4 seconds</span>
+            Spec dan ishlayotgan mock serverga <span className="text-gradient">4 soniya</span>
           </h3>
           <p className="mt-4 text-[16px] text-text-secondary">
-            Upload an OpenAPI spec and get a fully working mock server with realistic data,
-            edge-cached globally. Unblock your frontend team instantly.
+            OpenAPI spec yuklang va realistik ma'lumotlar bilan to'liq ishlayotgan mock server oling,
+            global ravishda edge-cached. Frontend jamoangizni darhol to'siqdan chiqaring.
           </p>
           <ul className="mt-6 space-y-3">
             {[
-              "Realistic responses generated from your schema",
-              "Edge-deployed in 18 regions worldwide",
-              "Custom scenarios with one-click overrides",
+              "Schemangizdan yaratilgan realistik javoblar",
+              "Dunyo bo'ylab 18 ta mintaqada edge-deployed",
+              "Bir marta bosish bilan maxsus senariylar",
             ].map((b) => (
               <li key={b} className="flex items-start gap-3 text-[14px] text-foreground">
                 <span className="mt-0.5 grid h-5 w-5 shrink-0 place-items-center rounded-md bg-primary/15 text-primary-hover">
@@ -226,13 +226,13 @@ function MockServerVisual() {
               <div className="font-mono text-[11px] text-text-muted">/api/public/mock-server/{`{serverId}`}</div>
             </div>
           </div>
-          <span className="rounded-md bg-success/15 px-2 py-1 text-[11px] font-medium text-success">Live</span>
+          <span className="rounded-md bg-success/15 px-2 py-1 text-[11px] font-medium text-success">Jonli</span>
         </div>
         <div className="mt-5 grid grid-cols-3 gap-3">
           {[
-            ["Requests", "48,291"],
+            ["So'rovlar", "48,291"],
             ["p50", "32ms"],
-            ["Uptime", "99.99%"],
+            ["Ish vaqti", "99.99%"],
           ].map(([k, v]) => (
             <div key={k} className="rounded-lg border border-border bg-background/50 p-3">
               <div className="text-[10px] uppercase tracking-wider text-text-muted">{k}</div>
@@ -282,11 +282,11 @@ function FeatureDrift() {
         <div className="max-w-lg">
           <SectionTag><GitPullRequest className="h-3 w-3" /> Contract Testing</SectionTag>
           <h3 className="mt-4 text-[32px] sm:text-[40px] font-bold tracking-tight leading-[1.1]">
-            Breaking changes flagged <span className="text-gradient">before they merge</span>
+            Sinovchi o'zgarishlar <span className="text-gradient">merge'dan oldin belgilanadi</span>
           </h3>
           <p className="mt-4 text-[16px] text-text-secondary">
-            Flowt compares every uploaded contract against your current spec. Breaking changes
-            are stored as real drift reports. Safe additions ship freely.
+            Flowt har bir yuklangan contract ni joriy spec bilan solishtiradi. Sinovchi o'zgarishlar
+            haqiqiy drift hisobotlari sifatida saqlanadi. Xavfsiz qo'shimchalar erkin jo'natiladi.
           </p>
           <div className="mt-6 rounded-xl border border-border bg-surface overflow-hidden">
             <div className="flex items-center gap-2 border-b border-border px-3 py-2 text-[12px] text-text-secondary">
@@ -294,19 +294,19 @@ function FeatureDrift() {
                 <svg viewBox="0 0 16 16" className="h-3 w-3 fill-current"><path d="M8 0a8 8 0 0 0-2.5 15.6c.4.1.5-.2.5-.4v-1.4c-2.2.5-2.7-1-2.7-1-.3-.9-.8-1.1-.8-1.1-.7-.5.1-.5.1-.5.8.1 1.2.8 1.2.8.7 1.2 1.9.9 2.4.7 0-.5.3-.9.5-1.1-1.8-.2-3.6-.9-3.6-4 0-.9.3-1.6.8-2.2-.1-.2-.4-1 .1-2.1 0 0 .7-.2 2.2.8.6-.2 1.3-.3 2-.3.7 0 1.4.1 2 .3 1.5-1 2.2-.8 2.2-.8.5 1.1.2 1.9.1 2.1.5.6.8 1.3.8 2.2 0 3.1-1.9 3.8-3.6 4 .3.2.5.7.5 1.4v2.1c0 .2.1.5.5.4A8 8 0 0 0 8 0z"/></svg>
               </span>
               <span className="font-medium text-foreground">flowt</span>
-              <span>commented on PR #1042 · just now</span>
+              <span>PR #1042 ga sharh qoldirdi · hozirgina</span>
             </div>
             <div className="p-4 space-y-3 text-[13px]">
-              <div className="font-medium text-foreground">⚠️ 2 breaking changes detected</div>
+              <div className="font-medium text-foreground">⚠️ 2 ta sinovchi o'zgarish aniqlandi</div>
               <div className="rounded-md bg-danger/10 border border-danger/20 p-3 font-mono text-[12px]">
                 <div className="text-danger">- DELETE /users/{`{id}`}</div>
-                <div className="text-text-muted">  endpoint removed</div>
+                <div className="text-text-muted">  uch o'chirildi</div>
               </div>
               <div className="rounded-md bg-danger/10 border border-danger/20 p-3 font-mono text-[12px]">
-                <div className="text-danger">+ POST /orders requires customer_id</div>
-                <div className="text-text-muted">  field added to required[]</div>
+                <div className="text-danger">+ POST /orders customer_id talab qiladi</div>
+                <div className="text-text-muted">  maydon required[] ga qo'shildi</div>
               </div>
-              <div className="text-text-secondary">3 frontend components and 12 tests use these endpoints. Review impact →</div>
+              <div className="text-text-secondary">3 ta frontend komponenti va 12 ta test bu uchlardan foydalanadi. Ta'sirini ko'rib chiqish →</div>
             </div>
           </div>
         </div>
@@ -375,7 +375,7 @@ function FeatureCI() {
             <span className="font-mono">.github/workflows/flowt.yml</span>
           </div>
           <pre className="p-5 font-mono text-[12.5px] leading-6 text-text-secondary whitespace-pre overflow-x-auto">
-{`name: API Contract Check
+{`name: API Contract Tekshiruvi
 on: [pull_request]
 
 jobs:
@@ -393,11 +393,11 @@ jobs:
         <div className="max-w-lg">
           <SectionTag><ShieldCheck className="h-3 w-3" /> CI/CD Native</SectionTag>
           <h3 className="mt-4 text-[32px] sm:text-[40px] font-bold tracking-tight leading-[1.1]">
-            One line in your pipeline. <span className="text-gradient">Zero surprises.</span>
+            Pipeline'da bitta qator. <span className="text-gradient">Kutilmagan hodisalar yo'q.</span>
           </h3>
           <p className="mt-4 text-[16px] text-text-secondary">
-            Use Flowt in GitHub Actions, GitLab CI, CircleCI, or Buildkite.
-            Compare uploaded contracts and keep rich reports in your workspace.
+            Flowt ni GitHub Actions, GitLab CI, CircleCI yoki Buildkite da ishlating.
+            Yuklangan contractlarni solishtiring va boy hisobotlarni ish joyingizda saqlang.
           </p>
           <div className="mt-6 grid grid-cols-3 gap-3">
             {[
@@ -419,10 +419,10 @@ jobs:
 
 function Stats() {
   const stats = [
-    ["4 sec", "Average mock spin-up"],
-    ["Real", "Workspace auth"],
-    ["99.97%", "Uptime SLA"],
-    ["Live", "Request stream"],
+    ["4 son", "O'rtacha mock ishga tushish"],
+    ["Haqiqiy", "Ish joyi autentifikatsiyasi"],
+    ["99.97%", "Ish vaqti KXSh"],
+    ["Jonli", "So'rov oqimi"],
   ];
   return (
     <section className="relative border-t border-border py-24">
@@ -443,9 +443,9 @@ function Stats() {
 
 function Testimonials() {
   const ts = [
-    { i: "AC", n: "Alex Chen", r: "CTO @ Linear", g: "from-indigo-500 to-cyan-500", q: "We caught breaking changes before the frontend team shipped against the wrong contract." },
-    { i: "SK", n: "Sarah Kim", r: "Staff Eng @ Stripe", g: "from-rose-500 to-orange-500", q: "Finally a contract testing tool that doesn't feel like 2014. The Linear-grade UX makes it actually fun." },
-    { i: "MJ", n: "Marcus Johnson", r: "Frontend Lead @ Vercel", g: "from-emerald-500 to-teal-500", q: "Mock servers in 4 seconds is not marketing copy — we measured. Unblocked our team in week one." },
+    { i: "AC", n: "Alex Chen", r: "CTO @ Linear", g: "from-indigo-500 to-cyan-500", q: "Biz sinovchi o'zgarishlarni frontend jamoasi noto'g'ri contractga qarshi jo'natishdan oldin ushladik." },
+    { i: "SK", n: "Sarah Kim", r: "Staff Eng @ Stripe", g: "from-rose-500 to-orange-500", q: "Nihoyat 2014 yilga o'xshamaydigan contract testing vositasi. Linear darajasidagi UX haqiqatan ham qiziqarli qiladi." },
+    { i: "MJ", n: "Marcus Johnson", r: "Frontend Lead @ Vercel", g: "from-emerald-500 to-teal-500", q: "4 soniyada mock serverlar marketing matni emas — biz o'lchadik. Birinchi haftada jamoamizni to'siqdan chiqardik." },
   ];
   return (
     <section className="border-t border-border py-24">
@@ -475,31 +475,31 @@ function Pricing() {
   const [annual, setAnnual] = useState(true);
   const tiers = [
     {
-      name: "Free", price: 0, popular: false, features: ["1 spec, 1 mock server", "10,000 mock requests/mo", "Community support", "Public projects"], cta: "Start free",
+      name: "Bepul", price: 0, popular: false, features: ["1 spec, 1 mock server", "10,000 mock so'rov/oy", "Jamoa qo'llab-quvvatlash", "Ommaviy loyihalar"], cta: "Bepul boshlash",
     },
     {
-      name: "Pro", price: 49, popular: true, features: ["Unlimited specs", "Unlimited mock requests", "Drift detection", "Email alerts", "Custom domains"], cta: "Start Pro trial",
+      name: "Pro", price: 49, popular: true, features: ["Cheksiz specs", "Cheksiz mock so'rovlar", "Drift detection", "Email ogohlantirishlari", "Maxsus domenlar"], cta: "Pro sinov boshlash",
     },
     {
-      name: "Team", price: 149, popular: false, features: ["Everything in Pro", "CI/CD integration", "GitHub/GitLab sync", "Slack alerts", "SSO + SAML", "Priority support"], cta: "Start Team trial",
+      name: "Jamoa", price: 149, popular: false, features: ["Pro'dagi hammasi", "CI/CD integratsiyasi", "GitHub/GitLab sinxron", "Slack ogohlantirishlari", "SSO + SAML", "Ustuvor qo'llab-quvvatlash"], cta: "Jamoa sinov boshlash",
     },
   ];
   return (
     <section className="border-t border-border py-32">
       <div className="mx-auto max-w-7xl px-6">
         <div className="text-center">
-          <h2 className="text-[36px] sm:text-[48px] font-bold tracking-tight">Simple pricing. <span className="text-gradient">No surprises.</span></h2>
-          <p className="mx-auto mt-4 max-w-xl text-text-secondary">Start free, upgrade when your team grows. Cancel anytime.</p>
+          <h2 className="text-[36px] sm:text-[48px] font-bold tracking-tight">Oddiy narxlar. <span className="text-gradient">Kutilmagan narsalar yo'q.</span></h2>
+          <p className="mx-auto mt-4 max-w-xl text-text-secondary">Bepul boshlang, jamoangiz o'sganda yangilang. Istalgan vaqtda bekor qilishingiz mumkin.</p>
           <div className="mt-8 inline-flex items-center gap-1 rounded-full border border-border bg-surface p-1">
-            {(["Monthly", "Annual"] as const).map((m) => {
-              const on = (m === "Annual") === annual;
+            {(["Oylik", "Yillik"] as const).map((m) => {
+              const on = (m === "Yillik") === annual;
               return (
                 <button
                   key={m}
-                  onClick={() => setAnnual(m === "Annual")}
+                  onClick={() => setAnnual(m === "Yillik")}
                   className={`relative rounded-full px-4 h-8 text-[13px] font-medium transition-colors ${on ? "bg-primary text-white" : "text-text-secondary hover:text-foreground"}`}
                 >
-                  {m} {m === "Annual" && <span className={`ml-1 text-[10px] ${on ? "text-white/80" : "text-success"}`}>−20%</span>}
+                  {m} {m === "Yillik" && <span className={`ml-1 text-[10px] ${on ? "text-white/80" : "text-success"}`}>−20%</span>}
                 </button>
               );
             })}
@@ -519,15 +519,15 @@ function Pricing() {
               >
                 {t.popular && (
                   <span className="absolute -top-3 left-6 rounded-full bg-primary px-2.5 py-0.5 text-[11px] font-semibold text-white">
-                    Most popular
+                    Eng mashhur
                   </span>
                 )}
                 <div className="text-[15px] font-semibold">{t.name}</div>
                 <div className="mt-3 flex items-baseline gap-1">
                   <span className="text-[44px] font-bold tracking-tight">${price}</span>
-                  <span className="text-text-muted text-[14px]">/mo</span>
+                  <span className="text-text-muted text-[14px]">/oy</span>
                 </div>
-                <p className="mt-1 text-[12px] text-text-muted">{annual ? "Billed annually" : "Billed monthly"}</p>
+                <p className="mt-1 text-[12px] text-text-muted">{annual ? "Yillik to'lanadi" : "Oylik to'lanadi"}</p>
                 <button
                   className={`mt-6 inline-flex h-10 w-full items-center justify-center rounded-lg text-[14px] font-medium transition-colors ${
                     t.popular ? "bg-primary text-white hover:bg-primary-hover" : "border border-border bg-surface-elevated text-foreground hover:border-border-hover"
@@ -553,18 +553,18 @@ function Pricing() {
 
 function FAQ() {
   const qs = [
-    ["Do I need to write any tests?", "No. Flowt derives endpoints, mock responses, and drift reports from your OpenAPI YAML or JSON file."],
-    ["Which spec formats are supported?", "OpenAPI 3.0, 3.1, Swagger 2.0, and GraphQL SDL. Postman collections import on the Pro plan."],
-    ["Can I use Flowt with private APIs?", "Yes. Upload specs from private repos or CI; mock servers and reports stay scoped to your workspace."],
-    ["How does drift detection work?", "Every commit compares the new spec against the last released contract. Breaking changes are blocked; safe changes pass."],
-    ["What languages do mock clients support?", "TypeScript, Python, Go, Ruby, PHP, Rust, Java, Kotlin, Swift, and C#. Generated SDKs ship with full types."],
-    ["Is there a free tier?", "Yes — forever free for one spec, one mock server, and 10K requests per month. No credit card required."],
+    ["Test yozishim kerakmi?", "Yo'q. Flowt OpenAPI YAML yoki JSON faylingizdan uchlar, mock javoblar va drift hisobotlarini oladi."],
+    ["Qaysi spec formatlari qo'llab-quvvatlanadi?", "OpenAPI 3.0, 3.1, Swagger 2.0 va GraphQL SDL. Postman to'plamlarini Pro tarifda import qilish mumkin."],
+    ["Flowt ni xususiy API lar bilan ishlatish mumkinmi?", "Ha. Xususiy repolardan yoki CI dan spec yuklang; mock serverlar va hisobotlar ish joyingizda qoladi."],
+    ["Drift detection qanday ishlaydi?", "Har bir commit yangi spec ni oxirgi nashr etilgan contract bilan solishtiradi. Sinovchi o'zgarishlar to'xtatiladi; xavfsiz o'zgarishlar o'tadi."],
+    ["Mock clientlari qaysi tillarni qo'llab-quvvatlaydi?", "TypeScript, Python, Go, Ruby, PHP, Rust, Java, Kotlin, Swift va C#. Yaratilgan SDK lar to'liq tiplar bilan keladi."],
+    ["Bepul tarif bormi?", "Ha — 1 spec, 1 mock server va oyiga 10K so'rov uchun doimo bepul. Kredit karta shart emas."],
   ];
   const [open, setOpen] = useState<number | null>(0);
   return (
     <section className="border-t border-border py-32">
       <div className="mx-auto max-w-3xl px-6">
-        <h2 className="text-center text-[36px] sm:text-[44px] font-bold tracking-tight">Questions, answered.</h2>
+        <h2 className="text-center text-[36px] sm:text-[44px] font-bold tracking-tight">Savollar va javoblar.</h2>
         <div className="mt-12 divide-y divide-border rounded-2xl border border-border bg-surface">
           {qs.map(([q, a], i) => {
             const on = open === i;
@@ -599,15 +599,15 @@ function CTA() {
           <div className="absolute inset-0 bg-noise opacity-50" />
           <div className="relative">
             <h2 className="text-[36px] sm:text-[44px] font-bold tracking-tight">
-              Ship APIs that <span className="text-gradient">never break</span>
+              <span className="text-gradient">Hech qachon buzilmaydigan</span> API'larni jo'nating
             </h2>
-            <p className="mx-auto mt-3 max-w-md text-text-secondary">Start free in 30 seconds. No credit card. Cancel anytime.</p>
+            <p className="mx-auto mt-3 max-w-md text-text-secondary">30 soniyada bepul boshlang. Kredit karta shart emas. Istalgan vaqtda bekor qiling.</p>
             <div className="mt-8 flex flex-col sm:flex-row items-center justify-center gap-3">
               <Link to="/signup" className="inline-flex h-11 items-center gap-2 rounded-lg bg-primary px-5 text-[14px] font-medium text-white hover:bg-primary-hover transition-colors">
-                Start free <ArrowRight className="h-4 w-4" />
+                Bepul boshlash <ArrowRight className="h-4 w-4" />
               </Link>
               <Link to="/login" className="inline-flex h-11 items-center gap-2 rounded-lg border border-border bg-surface/50 px-5 text-[14px] font-medium text-foreground hover:border-border-hover transition-colors">
-                Open dashboard
+                Boshqaruv panelini ochish
               </Link>
             </div>
           </div>

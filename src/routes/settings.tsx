@@ -10,19 +10,19 @@ import { Building2, Users, KeyRound, CreditCard, Plus, Trash2, Copy, Check, Load
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/settings")({
-  head: () => ({ meta: [{ title: "Settings — Flowt" }] }),
+  head: () => ({ meta: [{ title: "Sozlamalar — Flowt" }] }),
   component: () => (
-    <DashboardLayout crumbs={["Settings"]} action={false}>
+    <DashboardLayout crumbs={["Sozlamalar"]} action={false}>
       <SettingsPage />
     </DashboardLayout>
   ),
 });
 
 const tabs = [
-  { id: "general", label: "General", icon: Building2 },
-  { id: "team", label: "Team", icon: Users },
-  { id: "keys", label: "API Keys", icon: KeyRound },
-  { id: "billing", label: "Billing", icon: CreditCard },
+  { id: "general", label: "Umumiy", icon: Building2 },
+  { id: "team", label: "Jamoa", icon: Users },
+  { id: "keys", label: "API kalitlari", icon: KeyRound },
+  { id: "billing", label: "To'lov", icon: CreditCard },
 ] as const;
 
 function SettingsPage() {
@@ -31,8 +31,8 @@ function SettingsPage() {
   return (
     <div className="mx-auto max-w-5xl p-6 lg:p-8">
       <div className="mb-8">
-        <h1 className="text-[24px] font-semibold tracking-tight">Settings</h1>
-        <p className="mt-1 text-[13px] text-text-secondary">Manage your workspace, team and access.</p>
+        <h1 className="text-[24px] font-semibold tracking-tight">Sozlamalar</h1>
+        <p className="mt-1 text-[13px] text-text-secondary">Ish joyi, jamoa va kirishni boshqarish.</p>
       </div>
       <div className="flex gap-8">
         <nav className="w-48 shrink-0 space-y-0.5">
@@ -82,14 +82,14 @@ function GeneralTab() {
   async function save() {
     if (!org?.id) return;
     setBusy(true);
-    try { await updateOrg(org.id, { name }); toast.success("Workspace updated"); }
+    try { await updateOrg(org.id, { name }); toast.success("Ish joyi yangilandi"); }
     catch (e: any) { toast.error(e.message); } finally { setBusy(false); }
   }
 
   return (
     <div className="space-y-6">
-      <Section title="Workspace" desc="Public name shown to your team.">
-        <label className="block text-[12px] font-medium text-text-secondary mb-1.5">Name</label>
+      <Section title="Ish joyi" desc="Jamoangizga ko'rsatiladigan ommaviy nom.">
+        <label className="block text-[12px] font-medium text-text-secondary mb-1.5">Nomi</label>
         <input
           value={name} onChange={(e) => setName(e.target.value)}
           className="h-10 w-full rounded-md border border-border bg-background px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-primary"
@@ -97,15 +97,15 @@ function GeneralTab() {
         <div className="mt-3 text-[11px] text-text-muted font-mono">slug: {org?.slug}</div>
         <button onClick={save} disabled={busy || !name || name === org?.name}
           className="mt-4 inline-flex h-9 items-center gap-2 rounded-md bg-primary px-3.5 text-[13px] font-medium text-white hover:bg-primary-hover disabled:opacity-50">
-          {busy && <Loader2 className="h-3.5 w-3.5 animate-spin" />} Save changes
+          {busy && <Loader2 className="h-3.5 w-3.5 animate-spin" />} O'zgarishlarni saqlash
         </button>
       </Section>
 
-      <Section title="Account">
+      <Section title="Hisob">
         <dl className="divide-y divide-border text-[13px]">
-          <div className="flex justify-between py-2.5"><dt className="text-text-secondary">Email</dt><dd className="font-mono">{user?.email}</dd></div>
-          <div className="flex justify-between py-2.5"><dt className="text-text-secondary">Display name</dt><dd>{profile?.full_name || "—"}</dd></div>
-          <div className="flex justify-between py-2.5"><dt className="text-text-secondary">Role</dt>
+          <div className="flex justify-between py-2.5"><dt className="text-text-secondary">Elektron pochta</dt><dd className="font-mono">{user?.email}</dd></div>
+          <div className="flex justify-between py-2.5"><dt className="text-text-secondary">Ko'rsatiladigan ism</dt><dd>{profile?.full_name || "—"}</dd></div>
+          <div className="flex justify-between py-2.5"><dt className="text-text-secondary">Rol</dt>
             <dd className="inline-flex items-center gap-1.5">
               {profile?.role === "owner" ? <Crown className="h-3 w-3 text-amber-400" /> : <Shield className="h-3 w-3 text-primary-hover" />}
               {profile?.role}
@@ -137,18 +137,18 @@ function TeamTab() {
     setBusy(true);
     try {
       await inviteMember(org.id, email);
-      toast.success(`Invitation sent to ${email}`);
+      toast.success(`${email} ga taklif yuborildi`);
       setEmail(""); load();
     } catch (e: any) { toast.error(e.message); } finally { setBusy(false); }
   }
 
   async function revoke(id: string) {
-    await revokeInvite(id); load(); toast.success("Invitation revoked");
+    await revokeInvite(id); load(); toast.success("Taklif bekor qilindi");
   }
 
   return (
     <div className="space-y-6">
-      <Section title="Invite teammates" desc="They'll get access to all specs in this workspace.">
+      <Section title="Jamoa a'zolarini taklif qilish" desc="Ular bu ish joyidagi barcha specslarga kirish huquqiga ega bo'ladilar.">
         <form onSubmit={invite} className="flex gap-2">
           <input
             type="email" required value={email} onChange={(e) => setEmail(e.target.value)}
@@ -156,12 +156,12 @@ function TeamTab() {
             className="h-10 flex-1 rounded-md border border-border bg-background px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-primary"
           />
           <button disabled={busy} className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-[13px] font-medium text-white hover:bg-primary-hover disabled:opacity-50">
-            {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Mail className="h-3.5 w-3.5" />} Send invite
+            {busy ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Mail className="h-3.5 w-3.5" />} Taklif yuborish
           </button>
         </form>
       </Section>
 
-      <Section title="Members" desc={`${members.length} active`}>
+      <Section title="A'zolar" desc={`${members.length} faol`}>
         <ul className="divide-y divide-border">
           {members.map((m) => (
             <li key={m.id} className="flex items-center gap-3 py-3">
@@ -169,8 +169,8 @@ function TeamTab() {
                 {(m.full_name || "?").split(" ").map((s: string) => s[0]).slice(0, 2).join("")}
               </div>
               <div className="flex-1 min-w-0">
-                <div className="text-[13px] font-medium truncate">{m.full_name || "Unnamed"}</div>
-                <div className="text-[11px] text-text-muted">Joined {new Date(m.created_at).toLocaleDateString()}</div>
+                <div className="text-[13px] font-medium truncate">{m.full_name || "Nomsiz"}</div>
+                <div className="text-[11px] text-text-muted">Qo'shilgan {new Date(m.created_at).toLocaleDateString()}</div>
               </div>
               <span className="inline-flex items-center gap-1 rounded-md bg-white/5 px-2 py-0.5 text-[11px] font-medium capitalize">
                 {m.role === "owner" && <Crown className="h-3 w-3 text-amber-400" />} {m.role}
@@ -181,7 +181,7 @@ function TeamTab() {
       </Section>
 
       {invites.length > 0 && (
-        <Section title="Pending invitations">
+        <Section title="Kutilayotgan takliflar">
           <ul className="divide-y divide-border">
             {invites.map((i) => (
               <li key={i.id} className="flex items-center gap-3 py-2.5">
@@ -233,21 +233,21 @@ function KeysTab() {
 
   return (
     <div className="space-y-6">
-      <Section title="Create API key" desc="Use these keys to call the Flowt CI/CD API.">
+      <Section title="API kaliti yaratish" desc="Bu kalitlarni Flowt CI/CD API ga chaqirish uchun ishlating.">
         <form onSubmit={create} className="flex gap-2">
           <input
             value={name} onChange={(e) => setName(e.target.value)}
-            placeholder='e.g. "GitHub Actions — production"'
+            placeholder='masalan: "GitHub Actions — production"'
             className="h-10 flex-1 rounded-md border border-border bg-background px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-primary"
           />
           <button disabled={creating || !name} className="inline-flex h-10 items-center gap-2 rounded-md bg-primary px-4 text-[13px] font-medium text-white hover:bg-primary-hover disabled:opacity-50">
-            {creating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />} Generate
+            {creating ? <Loader2 className="h-3.5 w-3.5 animate-spin" /> : <Plus className="h-3.5 w-3.5" />} Yaratish
           </button>
         </form>
 
         {revealed && (
           <div className="mt-4 rounded-lg border border-success/30 bg-success/5 p-4">
-            <div className="text-[12px] font-medium text-success mb-1.5">✓ Key created — copy it now, it won't be shown again</div>
+            <div className="text-[12px] font-medium text-success mb-1.5">✓ Kalit yaratildi — hozir nusxa oling, yana ko'rsatilmaydi</div>
             <div className="flex items-center gap-2 rounded-md border border-border bg-background px-3 py-2 font-mono text-[12px]">
               <code className="flex-1 truncate">{revealed.key}</code>
               <button onClick={copy} className="grid h-7 w-7 place-items-center rounded text-text-secondary hover:bg-white/5">
@@ -258,9 +258,9 @@ function KeysTab() {
         )}
       </Section>
 
-      <Section title="Active keys" desc={`${keys.length} key${keys.length === 1 ? "" : "s"}`}>
+      <Section title="Faol kalitlar" desc={`${keys.length} ta kalit`}>
         {keys.length === 0 ? (
-          <div className="py-6 text-center text-[12.5px] text-text-muted">No API keys yet.</div>
+          <div className="py-6 text-center text-[12.5px] text-text-muted">Hali API kalitlari yo'q.</div>
         ) : (
           <ul className="divide-y divide-border">
             {keys.map((k) => (
@@ -268,9 +268,9 @@ function KeysTab() {
                 <KeyRound className="h-4 w-4 text-text-muted" />
                 <div className="flex-1 min-w-0">
                   <div className="text-[13px] font-medium truncate">{k.name}</div>
-                  <div className="font-mono text-[11px] text-text-muted">{k.key_preview} · created {new Date(k.created_at).toLocaleDateString()}</div>
+                  <div className="font-mono text-[11px] text-text-muted">{k.key_preview} · yaratilgan {new Date(k.created_at).toLocaleDateString()}</div>
                 </div>
-                <button onClick={() => deleteApiKey(k.id).then(load).then(() => toast.success("Key revoked"))}
+                <button onClick={() => deleteApiKey(k.id).then(load).then(() => toast.success("Kalit bekor qilindi"))}
                   className="text-text-muted hover:text-danger">
                   <Trash2 className="h-3.5 w-3.5" />
                 </button>
@@ -288,20 +288,20 @@ function BillingTab() {
   const plan = org?.plan || "free";
 
   const plans = [
-    { id: "free", name: "Free", price: "$0", desc: "1 spec · 10k requests/mo", features: ["1 spec", "10k mock requests / mo", "Drift detection", "Email support"] },
-    { id: "pro", name: "Pro", price: "$29", desc: "Up to 25 specs", features: ["25 specs", "Unlimited mock requests", "Real-time drift alerts", "GitHub Actions integration", "Priority support"], popular: true },
-    { id: "team", name: "Team", price: "$99", desc: "Unlimited specs + SSO", features: ["Unlimited specs", "SAML SSO", "Audit logs", "Custom retention", "Dedicated support"] },
+    { id: "free", name: "Bepul", price: "$0", desc: "1 spec · 10k so'rov/oy", features: ["1 spec", "10k mock so'rov / oy", "Drift detection", "Email qo'llab-quvvatlash"] },
+    { id: "pro", name: "Pro", price: "$29", desc: "25 tagacha spec", features: ["25 specs", "Cheksiz mock so'rovlar", "Jonli drift ogohlantirishlari", "GitHub Actions integratsiyasi", "Ustuvor qo'llab-quvvatlash"], popular: true },
+    { id: "team", name: "Jamoa", price: "$99", desc: "Cheksiz spec + SSO", features: ["Cheksiz specs", "SAML SSO", "Audit jurnallari", "Maxsus saqlash", "Maxsus qo'llab-quvvatlash"] },
   ];
 
   return (
     <div className="space-y-6">
-      <Section title="Current plan">
+      <Section title="Joriy tarif">
         <div className="flex items-center justify-between">
           <div>
             <div className="text-[20px] font-semibold capitalize">{plan}</div>
-            <div className="text-[12.5px] text-text-secondary mt-0.5">Renews monthly · next charge in 28 days</div>
+            <div className="text-[12.5px] text-text-secondary mt-0.5">Oyiga yangilanadi · keyingi to'lov 28 kundan keyin</div>
           </div>
-          <span className="rounded-md bg-success/15 px-2.5 py-1 text-[11px] font-semibold text-success uppercase">Active</span>
+          <span className="rounded-md bg-success/15 px-2.5 py-1 text-[11px] font-semibold text-success uppercase">Faol</span>
         </div>
       </Section>
 
@@ -313,12 +313,12 @@ function BillingTab() {
               p.popular ? "border-primary/40 bg-primary/5" : "border-border bg-surface"
             }`}>
               {p.popular && (
-                <span className="absolute -top-2 left-5 rounded bg-primary px-2 py-0.5 text-[10px] font-semibold text-white">POPULAR</span>
+                <span className="absolute -top-2 left-5 rounded bg-primary px-2 py-0.5 text-[10px] font-semibold text-white">MASHHUR</span>
               )}
               <div className="text-[14px] font-semibold">{p.name}</div>
               <div className="mt-2 flex items-baseline gap-1">
                 <span className="text-[28px] font-bold">{p.price}</span>
-                <span className="text-[12px] text-text-muted">/ mo</span>
+                <span className="text-[12px] text-text-muted">/ oy</span>
               </div>
               <p className="mt-1 text-[12px] text-text-secondary">{p.desc}</p>
               <ul className="mt-4 space-y-1.5 text-[12.5px] text-text-secondary">
@@ -327,20 +327,20 @@ function BillingTab() {
                 ))}
               </ul>
               <button disabled={current}
-                onClick={() => toast.info("Connect Lovable Cloud → Payments to enable Stripe")}
+                onClick={() => toast.info("To'lovni yoqish uchun Lovable Cloud → Payments ga ulanish kerak")}
                 className={`mt-5 w-full inline-flex h-9 items-center justify-center rounded-md text-[13px] font-medium transition-colors ${
                   current ? "bg-white/5 text-text-muted cursor-default"
                           : p.popular ? "bg-primary text-white hover:bg-primary-hover"
                                       : "border border-border text-foreground hover:bg-white/5"
                 }`}>
-                {current ? "Current plan" : "Upgrade"}
+                {current ? "Joriy tarif" : "Yangilash"}
               </button>
             </div>
           );
         })}
       </div>
 
-      <p className="text-[11px] text-text-muted text-center">Payments not yet enabled · contact owner to upgrade</p>
+      <p className="text-[11px] text-text-muted text-center">To'lov hali yoqilmagan · yangilash uchun egasi bilan bog'laning</p>
     </div>
   );
 }
