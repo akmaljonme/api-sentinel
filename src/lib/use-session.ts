@@ -24,7 +24,7 @@ async function ensureUserWorkspace(user: User, _existing: ProfileRow | null) {
     user.user_metadata?.full_name || user.user_metadata?.name || user.email?.split("@")[0] || "User";
 
   const { error: rpcError } = await supabase.rpc("ensure_user_workspace", {
-    _email: user.email ?? null,
+    _email: user.email ?? undefined,
     _full_name: displayName,
   });
   if (rpcError) throw rpcError;
