@@ -223,6 +223,35 @@ export type Database = {
           },
         ]
       }
+      org_billing: {
+        Row: {
+          org_id: string
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          org_id: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          org_id?: string
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "org_billing_org_id_fkey"
+            columns: ["org_id"]
+            isOneToOne: true
+            referencedRelation: "organizations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       organizations: {
         Row: {
           created_at: string | null
@@ -230,8 +259,6 @@ export type Database = {
           name: string
           plan: string | null
           slug: string
-          stripe_customer_id: string | null
-          stripe_subscription_id: string | null
         }
         Insert: {
           created_at?: string | null
@@ -239,8 +266,6 @@ export type Database = {
           name: string
           plan?: string | null
           slug: string
-          stripe_customer_id?: string | null
-          stripe_subscription_id?: string | null
         }
         Update: {
           created_at?: string | null
@@ -248,8 +273,6 @@ export type Database = {
           name?: string
           plan?: string | null
           slug?: string
-          stripe_customer_id?: string | null
-          stripe_subscription_id?: string | null
         }
         Relationships: []
       }
