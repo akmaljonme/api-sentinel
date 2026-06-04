@@ -6,7 +6,7 @@ import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/login")({
-  head: () => ({ meta: [{ title: "Kirish — Flowt" }, { name: "description", content: "Flowt tizimiga kirish." }] }),
+  head: () => ({ meta: [{ title: "Sign in — Flowt" }, { name: "description", content: "Sign in to your Flowt workspace." }] }),
   component: LoginPage,
 });
 
@@ -23,18 +23,18 @@ function LoginPage() {
       await signInWithEmail(email, password);
       nav({ to: "/dashboard" });
     } catch (err: any) {
-      toast.error(err.message || "Noto'g'ri ma'lumotlar");
+      toast.error(err.message || "Invalid credentials");
     } finally { setBusy(false); }
   }
 
-  return <AuthShell title="Xush kelibsiz" subtitle="Flowt ish joyingizga kiring." footer={
-    <>Hisobingiz yo'qmi? <Link to="/signup" className="text-primary-hover hover:underline">Ro'yxatdan o'tish</Link></>
+  return <AuthShell title="Welcome back" subtitle="Sign in to your Flowt workspace." footer={
+    <>Don't have an account? <Link to="/signup" className="text-primary-hover hover:underline">Sign up</Link></>
   }>
     <form onSubmit={onSubmit} className="space-y-3">
-      <Field label="Elektron pochta" type="email" value={email} onChange={setEmail} autoComplete="email" required />
-      <Field label="Parol" type="password" value={password} onChange={setPassword} autoComplete="current-password" required />
+      <Field label="Email address" type="email" value={email} onChange={setEmail} autoComplete="email" required />
+      <Field label="Password" type="password" value={password} onChange={setPassword} autoComplete="current-password" required />
       <button disabled={busy} className="inline-flex h-10 w-full items-center justify-center gap-2 rounded-md bg-primary text-[14px] font-medium text-white hover:bg-primary-hover disabled:opacity-60 transition-colors">
-        {busy && <Loader2 className="h-4 w-4 animate-spin" />} Kirish
+        {busy && <Loader2 className="h-4 w-4 animate-spin" />} Sign in
       </button>
     </form>
   </AuthShell>;
@@ -54,7 +54,7 @@ export function AuthShell({ title, subtitle, children, footer }: { title: string
             <p className="mt-8 text-center text-[13px] text-text-secondary">{footer}</p>
           </div>
         </div>
-        <div className="py-6 text-center text-[12px] text-text-muted">© 2026 Flowt. Mukammal ish joyi.</div>
+        <div className="py-6 text-center text-[12px] text-text-muted">© 2026 Flowt. The perfect workspace.</div>
       </div>
     </div>
   );
@@ -77,7 +77,7 @@ export function Divider() {
   return (
     <div className="relative my-2 flex items-center gap-3">
       <div className="h-px flex-1 bg-border" />
-      <span className="text-[11px] uppercase tracking-wider text-text-muted">yoki</span>
+      <span className="text-[11px] uppercase tracking-wider text-text-muted">or</span>
       <div className="h-px flex-1 bg-border" />
     </div>
   );

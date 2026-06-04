@@ -6,8 +6,8 @@ import { useSession } from "@/lib/use-session";
 import { signOut } from "@/lib/auth";
 
 const items: { to: string; label: string; Icon: any; exact?: boolean; match?: string }[] = [
-  { to: "/dashboard", label: "Umumiy ko'rinish", Icon: Home, exact: true },
-  { to: "/settings", label: "Sozlamalar", Icon: Settings, match: "/settings" },
+  { to: "/dashboard", label: "Overview", Icon: Home, exact: true },
+  { to: "/settings", label: "Settings", Icon: Settings, match: "/settings" },
 ];
 
 export function DashboardSidebar() {
@@ -56,16 +56,16 @@ export function DashboardSidebar() {
           );
         })}
         {!collapsed && (
-          <div className="mt-5 px-2.5 text-[10px] uppercase tracking-wider text-text-muted">Resurslar</div>
+          <div className="mt-5 px-2.5 text-[10px] uppercase tracking-wider text-text-muted">Resources</div>
         )}
         <a href="https://github.com" target="_blank" rel="noreferrer"
           className="flex items-center gap-3 rounded-md px-2.5 h-9 text-[13px] font-medium text-text-secondary hover:bg-white/5 hover:text-foreground transition-colors">
           <FileCode2 className="h-4 w-4" />
-          {!collapsed && <span>Hujjatlar</span>}
+          {!collapsed && <span>Docs</span>}
         </a>
         <Link to="/settings" className="flex items-center gap-3 rounded-md px-2.5 h-9 text-[13px] font-medium text-text-secondary hover:bg-white/5 hover:text-foreground transition-colors">
           <KeyRound className="h-4 w-4" />
-          {!collapsed && <span>API kalitlari</span>}
+          {!collapsed && <span>API Keys</span>}
         </Link>
       </nav>
       <div className="border-t border-sidebar-border p-3 space-y-1">
@@ -75,7 +75,7 @@ export function DashboardSidebar() {
           </div>
           {!collapsed && (
             <div className="min-w-0 flex-1">
-              <div className="truncate text-[13px] font-medium">{profile?.full_name || user?.email?.split("@")[0] || "Hisob"}</div>
+              <div className="truncate text-[13px] font-medium">{profile?.full_name || user?.email?.split("@")[0] || "Account"}</div>
               <div className="truncate text-[11px] text-text-muted">{org?.name || user?.email}</div>
             </div>
           )}
@@ -90,7 +90,7 @@ export function DashboardSidebar() {
           className="flex w-full items-center gap-3 rounded-md px-2.5 h-8 text-[12.5px] text-text-secondary hover:bg-white/5 hover:text-foreground transition-colors"
         >
           <LogOut className="h-3.5 w-3.5" />
-          {!collapsed && <span>Chiqish</span>}
+          {!collapsed && <span>Sign out</span>}
         </button>
       </div>
     </aside>

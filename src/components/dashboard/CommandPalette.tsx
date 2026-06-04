@@ -44,18 +44,18 @@ export function CommandPalette({ onNewSpec }: { onNewSpec: () => void }) {
   }, [open, profile?.org_id]);
 
   const items: Item[] = [
-    { id: "new", label: "Yangi spec yuklash", hint: "Yaratish", group: "Amallar", icon: Plus, run: () => { onNewSpec(); setOpen(false); } },
-    { id: "home", label: "Boshqaruv paneliga o'tish", group: "Navigatsiya", icon: Home, run: () => { nav({ to: "/dashboard" }); setOpen(false); } },
-    { id: "settings", label: "Sozlamalarni ochish", hint: "Jamoa, API kalitlari", group: "Navigatsiya", icon: Settings, run: () => { nav({ to: "/settings" }); setOpen(false); } },
+    { id: "new", label: "Upload new spec", hint: "Create", group: "Actions", icon: Plus, run: () => { onNewSpec(); setOpen(false); } },
+    { id: "home", label: "Go to Dashboard", group: "Navigation", icon: Home, run: () => { nav({ to: "/dashboard" }); setOpen(false); } },
+    { id: "settings", label: "Open Settings", hint: "Team, API Keys", group: "Navigation", icon: Settings, run: () => { nav({ to: "/settings" }); setOpen(false); } },
     ...specs.map((s) => ({
-      id: s.id, label: s.name, hint: s.version || "", group: "Specslar", icon: FileCode2,
+      id: s.id, label: s.name, hint: s.version || "", group: "Specs", icon: FileCode2,
       run: () => { nav({ to: "/specs/$id", params: { id: s.id } }); setOpen(false); },
     })),
     ...specs.map((s) => ({
-      id: "drift-" + s.id, label: `Drift hisoboti — ${s.name}`, group: "Drift", icon: GitCompare,
+      id: "drift-" + s.id, label: `Drift report — ${s.name}`, group: "Drift", icon: GitCompare,
       run: () => { nav({ to: "/drift/$id", params: { id: s.id } }); setOpen(false); },
     })),
-    { id: "signout", label: "Chiqish", group: "Hisob", icon: LogOut, run: () => { signOut(); setOpen(false); } },
+    { id: "signout", label: "Sign out", group: "Account", icon: LogOut, run: () => { signOut(); setOpen(false); } },
   ];
 
   const filtered = q
@@ -86,14 +86,14 @@ export function CommandPalette({ onNewSpec }: { onNewSpec: () => void }) {
           <input
             autoFocus value={q} onChange={(e) => { setQ(e.target.value); setActive(0); }}
             onKeyDown={onKey}
-            placeholder="Buyruq kiriting yoki qidiring…"
+            placeholder="Type a command or search…"
             className="h-12 flex-1 bg-transparent text-[14px] text-foreground placeholder:text-text-muted outline-none"
           />
           <kbd className="rounded bg-white/5 px-1.5 py-0.5 font-mono text-[10px] text-text-muted">esc</kbd>
         </div>
         <div className="max-h-[60vh] overflow-y-auto p-2">
           {filtered.length === 0 && (
-            <div className="px-3 py-8 text-center text-[13px] text-text-muted">Natija yo'q</div>
+            <div className="px-3 py-8 text-center text-[13px] text-text-muted">No results</div>
           )}
           {Object.entries(groups).map(([group, list]) => (
             <div key={group} className="mb-2">
@@ -120,10 +120,10 @@ export function CommandPalette({ onNewSpec }: { onNewSpec: () => void }) {
           ))}
         </div>
         <div className="flex items-center justify-between border-t border-border bg-background/40 px-4 py-2 text-[11px] text-text-muted">
-          <div className="flex items-center gap-1.5"><Sparkles className="h-3 w-3" /> Flowt Buyruqlari</div>
+          <div className="flex items-center gap-1.5"><Sparkles className="h-3 w-3" /> Flowt Commands</div>
           <div className="flex items-center gap-3 font-mono">
-            <span><kbd className="rounded bg-white/5 px-1 py-0.5">↑↓</kbd> navigatsiya</span>
-            <span><kbd className="rounded bg-white/5 px-1 py-0.5">↵</kbd> tanlash</span>
+            <span><kbd className="rounded bg-white/5 px-1 py-0.5">↑↓</kbd> navigate</span>
+            <span><kbd className="rounded bg-white/5 px-1 py-0.5">↵</kbd> select</span>
           </div>
         </div>
       </div>

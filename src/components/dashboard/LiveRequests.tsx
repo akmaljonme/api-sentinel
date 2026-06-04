@@ -35,14 +35,14 @@ export function LiveRequests({ mockServerId }: { mockServerId: string }) {
             <span className="absolute inline-flex h-full w-full rounded-full bg-success opacity-75 animate-ping" />
             <span className="relative inline-flex h-2 w-2 rounded-full bg-success" />
           </span>
-          Jonli so'rov oqimi
+          Live request stream
         </div>
-        <span className="text-[11px] text-text-muted">{rows.length} so'nggi</span>
+        <span className="text-[11px] text-text-muted">{rows.length} latest</span>
       </div>
       {rows.length === 0 ? (
         <div className="px-5 py-12 text-center text-[12px] text-text-muted">
           <Activity className="mx-auto mb-2 h-4 w-4" />
-          Birinchi so'rov kutilmoqda… yuqoridagi <span className="text-foreground">Sinab ko'rish</span> varag'idan foydalaning.
+          Waiting for the first request… use the <span className="text-foreground">Try it out</span> tab above.
         </div>
       ) : (
         <ul className="divide-y divide-border max-h-[480px] overflow-y-auto">

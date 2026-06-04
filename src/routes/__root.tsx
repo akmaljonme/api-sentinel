@@ -7,16 +7,16 @@ function NotFoundComponent() {
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
         <h1 className="text-7xl font-bold text-foreground">404</h1>
-        <h2 className="mt-4 text-xl font-semibold text-foreground">Sahifa topilmadi</h2>
+        <h2 className="mt-4 text-xl font-semibold text-foreground">Page not found</h2>
         <p className="mt-2 text-sm text-muted-foreground">
-          Qidirayotgan sahifa mavjud emas yoki ko'chirilgan.
+          The page you are looking for does not exist or has been moved.
         </p>
         <div className="mt-6">
           <Link
             to="/"
             className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90"
           >
-            Bosh sahifaga qaytish
+            Back to home
           </Link>
         </div>
       </div>
@@ -29,14 +29,14 @@ export const Route = createRootRoute({
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "Flowt — API oqimlari hech qachon production'ni buzmaydi" },
-      { name: "description", content: "Flowt — API contract testing platformasi. Jonli mock serverlar, drift detection va CI/CD ogohlantirishlar sinovchi o'zgarishlarni jo'natishdan oldin ushlaydi." },
-      { property: "og:title", content: "Flowt — API oqimlari hech qachon production'ni buzmaydi" },
-      { property: "og:description", content: "Flowt — API contract testing platformasi. Jonli mock serverlar, drift detection va CI/CD ogohlantirishlar sinovchi o'zgarishlarni jo'natishdan oldin ushlaydi." },
+      { title: "Flowt — API flows never break production" },
+      { name: "description", content: "Flowt — API contract testing platform. Live mock servers, drift detection, and CI/CD alerts catch breaking changes before shipping." },
+      { property: "og:title", content: "Flowt — API flows never break production" },
+      { property: "og:description", content: "Flowt — API contract testing platform. Live mock servers, drift detection, and CI/CD alerts catch breaking changes before shipping." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "Flowt — API oqimlari hech qachon production'ni buzmaydi" },
-      { name: "twitter:description", content: "Flowt — API contract testing platformasi. Jonli mock serverlar, drift detection va CI/CD ogohlantirishlar sinovchi o'zgarishlarni jo'natishdan oldin ushlaydi." },
+      { name: "twitter:title", content: "Flowt — API flows never break production" },
+      { name: "twitter:description", content: "Flowt — API contract testing platform. Live mock servers, drift detection, and CI/CD alerts catch breaking changes before shipping." },
       { property: "og:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/6cf5dc28-9b1a-400d-9534-5daf889793de" },
       { name: "twitter:image", content: "https://storage.googleapis.com/gpt-engineer-file-uploads/attachments/og-images/6cf5dc28-9b1a-400d-9534-5daf889793de" },
     ],
@@ -54,7 +54,7 @@ export const Route = createRootRoute({
 
 function RootShell({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="uz">
+    <html lang="en">
       <head>
         <HeadContent />
       </head>
