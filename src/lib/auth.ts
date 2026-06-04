@@ -20,7 +20,7 @@ export async function signInWithEmail(email: string, password: string) {
 }
 
 export async function signInWithGoogle() {
-  throw new Error("Google orqali kirish hali yoqilmagan. Iltimos, elektron pochta va parolni ishlating.");
+  throw new Error("Google sign-in is not enabled yet. Please use email and password.");
   /*
   const { error } = await supabase.auth.signInWithOAuth({
     provider: "google",
