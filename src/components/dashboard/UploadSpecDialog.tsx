@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Loader2, Upload, FileCode2 } from "lucide-react";
 import { uploadSpec } from "@/lib/specs";
 import { SAMPLE_SPEC_YAML } from "@/lib/sample-spec";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
 
