@@ -3,6 +3,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } f
 import { Loader2, Upload, FileCode2 } from "lucide-react";
 import { uploadSpec } from "@/lib/specs";
 import { SAMPLE_SPEC_YAML } from "@/lib/sample-spec";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
 
@@ -29,11 +30,26 @@ export function UploadSpecDialog({
   }
 
   async function submit() {
-    if (!orgId) return toast.error("No workspace found");
     if (!content.trim()) return toast.error("Paste or upload an OpenAPI spec");
     setBusy(true);
     try {
-      const { spec } = await uploadSpec({ name: name || "Untitled API", content }, orgId);
+      let workspaceId = orgId;
+      if (!workspaceId) {
+        const { data: u } = await supabase.auth.getUser();
+        if (!u.user) throw new Error("Please sign in again");
+        await supabase.rpc("ensure_user_workspace", {
+          _email: u.user.email ?? undefined,
+          _full_name: u.user.user_metadata?.full_name ?? u.user.email?.split("@")[0] ?? "User",
+        });
+        const { data: p } = await supabase
+          .from("profiles")
+          .select("org_id")
+          .eq("id", u.user.id)
+          .maybeSingle();
+        workspaceId = p?.org_id ?? null;
+      }
+      if (!workspaceId) throw new Error("Could not load your workspace. Please refresh and try again.");
+      const { spec } = await uploadSpec({ name: name || "Untitled API", content }, workspaceId);
       toast.success("Spec uploaded — parsing endpoints…");
       onOpenChange(false);
       setContent("");
