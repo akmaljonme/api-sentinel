@@ -74,16 +74,26 @@ function Section({ title, desc, children }: any) {
 }
 
 function GeneralTab() {
-  const { org, profile, user } = useSession();
+  const { org, profile, user, loading } = useSession();
   const [name, setName] = useState("");
   const [busy, setBusy] = useState(false);
   useEffect(() => { setName(org?.name || ""); }, [org?.name]);
 
   async function save() {
-    if (!org?.id) return;
+    if (!org?.id) return toast.error("Workspace not loaded yet — please refresh");
     setBusy(true);
-    try { await updateOrg(org.id, { name }); toast.success("Workspace updated"); }
-    catch (e: any) { toast.error(e.message); } finally { setBusy(false); }
+    try {
+      await updateOrg(org.id, { name });
+      toast.success("Workspace updated");
+    } catch (e: any) { toast.error(e.message); } finally { setBusy(false); }
+  }
+
+  if (loading || !profile || !org) {
+    return (
+      <div className="grid place-items-center py-24 text-text-secondary">
+        <Loader2 className="h-5 w-5 animate-spin" />
+      </div>
+    );
   }
 
   return (
@@ -94,8 +104,8 @@ function GeneralTab() {
           value={name} onChange={(e) => setName(e.target.value)}
           className="h-10 w-full rounded-md border border-border bg-background px-3 text-[14px] focus:outline-none focus:ring-2 focus:ring-primary"
         />
-        <div className="mt-3 text-[11px] text-text-muted font-mono">slug: {org?.slug}</div>
-        <button onClick={save} disabled={busy || !name || name === org?.name}
+        <div className="mt-3 text-[11px] text-text-muted font-mono">slug: {org.slug}</div>
+        <button onClick={save} disabled={busy || !name || name === org.name}
           className="mt-4 inline-flex h-9 items-center gap-2 rounded-md bg-primary px-3.5 text-[13px] font-medium text-white hover:bg-primary-hover disabled:opacity-50">
           {busy && <Loader2 className="h-3.5 w-3.5 animate-spin" />} Save changes
         </button>
@@ -104,11 +114,11 @@ function GeneralTab() {
       <Section title="Account">
         <dl className="divide-y divide-border text-[13px]">
           <div className="flex justify-between py-2.5"><dt className="text-text-secondary">Email address</dt><dd className="font-mono">{user?.email}</dd></div>
-          <div className="flex justify-between py-2.5"><dt className="text-text-secondary">Display name</dt><dd>{profile?.full_name || "—"}</dd></div>
+          <div className="flex justify-between py-2.5"><dt className="text-text-secondary">Display name</dt><dd>{profile.full_name || user?.email?.split("@")[0] || "—"}</dd></div>
           <div className="flex justify-between py-2.5"><dt className="text-text-secondary">Role</dt>
             <dd className="inline-flex items-center gap-1.5">
-              {profile?.role === "owner" ? <Crown className="h-3 w-3 text-amber-400" /> : <Shield className="h-3 w-3 text-primary-hover" />}
-              {profile?.role}
+              {profile.role === "owner" ? <Crown className="h-3 w-3 text-amber-400" /> : <Shield className="h-3 w-3 text-primary-hover" />}
+              {profile.role}
             </dd>
           </div>
         </dl>
