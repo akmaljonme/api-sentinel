@@ -21,8 +21,8 @@ export function Nav() {
         <div className="flex items-center gap-8">
           <Logo />
           <nav className="hidden md:flex items-center gap-1 text-sm text-text-secondary">
-          {["Product", "Docs", "Pricing", "News"].map((l) => (
-              <a key={l} href="/signup" className="rounded-md px-3 py-1.5 hover:text-foreground hover:bg-white/5 transition-colors">
+          {[["Product", "/#product"], ["Pricing", "/#pricing"], ["Investors", "/pitch"]].map(([l, h]) => (
+              <a key={l} href={h} className="rounded-md px-3 py-1.5 hover:text-foreground hover:bg-white/5 transition-colors">
                 {l}
               </a>
             ))}

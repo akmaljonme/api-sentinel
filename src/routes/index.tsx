@@ -121,7 +121,7 @@ function ProblemSolution() {
     "Auto-sync from GitHub, always fresh",
   ];
   return (
-    <section className="relative py-32 border-t border-border">
+    <section id="product" className="scroll-mt-16 relative py-32 border-t border-border">
       <div className="mx-auto max-w-7xl px-6">
         <div className="text-center">
           <span className="text-[12px] font-medium uppercase tracking-wider text-primary-hover">The Problem</span>
@@ -421,7 +421,7 @@ function Stats() {
   const stats = [
     ["4s", "Avg mock startup"],
     ["Real", "Workspace auth"],
-    ["99.97%", "Uptime SLA"],
+    ["OpenAPI 3.x", "Spec support"],
     ["Live", "Request streaming"],
   ];
   return (
@@ -443,9 +443,9 @@ function Stats() {
 
 function Testimonials() {
   const ts = [
-    { i: "AC", n: "Alex Chen", r: "CTO @ Linear", g: "from-indigo-500 to-cyan-500", q: "We caught breaking changes before our frontend team could ship against the wrong contract." },
-    { i: "SK", n: "Sarah Kim", r: "Staff Eng @ Stripe", g: "from-rose-500 to-orange-500", q: "Finally a contract testing tool that doesn't feel like it's from 2014. Linear-level UX makes it genuinely fun." },
-    { i: "MJ", n: "Marcus Johnson", r: "Frontend Lead @ Vercel", g: "from-emerald-500 to-teal-500", q: "4-second mock servers isn't marketing fluff — we measured it. Unblocked our team in the first week." },
+    { i: "FE", n: "Frontend teams", r: "Build before the backend ships", g: "from-indigo-500 to-cyan-500", q: "Upload the spec, get a live mock URL, and build UI against real response shapes on day one." },
+    { i: "BE", n: "Backend teams", r: "Change APIs with confidence", g: "from-rose-500 to-orange-500", q: "Compare spec versions and see every breaking change before it reaches a client." },
+    { i: "PL", n: "Platform teams", r: "One source of truth", g: "from-emerald-500 to-teal-500", q: "Every spec, mock server and drift report lives in one shared workspace with team access and API keys." },
   ];
   return (
     <section className="border-t border-border py-24">
@@ -483,9 +483,12 @@ function Pricing() {
     {
       name: "Team", price: 149, popular: false, features: ["Everything in Pro", "CI/CD integration", "GitHub/GitLab sync", "Slack alerts", "SSO + SAML", "Priority support"], cta: "Start Team Trial",
     },
+    {
+      name: "Enterprise", price: -1, popular: false, features: ["Everything in Team", "Unlimited workspaces", "Audit logs", "Self-hosted option", "99.9% uptime SLA", "Dedicated success manager"], cta: "Contact sales",
+    },
   ];
   return (
-    <section className="border-t border-border py-32">
+    <section id="pricing" className="scroll-mt-16 border-t border-border py-32">
       <div className="mx-auto max-w-7xl px-6">
         <div className="text-center">
           <h2 className="text-[36px] sm:text-[48px] font-bold tracking-tight">Simple pricing. <span className="text-gradient">No surprises.</span></h2>
@@ -505,7 +508,7 @@ function Pricing() {
             })}
           </div>
         </div>
-        <div className="mt-12 grid gap-6 lg:grid-cols-3">
+        <div className="mt-12 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
           {tiers.map((t) => {
             const price = annual ? Math.round(t.price * 0.8) : t.price;
             return (
@@ -524,17 +527,17 @@ function Pricing() {
                 )}
                 <div className="text-[15px] font-semibold">{t.name}</div>
                 <div className="mt-3 flex items-baseline gap-1">
-                  <span className="text-[44px] font-bold tracking-tight">${price}</span>
-                  <span className="text-text-muted text-[14px]">/mo</span>
+                  <span className="text-[44px] font-bold tracking-tight">{t.price < 0 ? "Custom" : `$${price}`}</span>
+                  {t.price >= 0 && <span className="text-text-muted text-[14px]">/mo</span>}
                 </div>
-                <p className="mt-1 text-[12px] text-text-muted">{annual ? "Billed yearly" : "Billed monthly"}</p>
-                <button
+                <p className="mt-1 text-[12px] text-text-muted">{t.price < 0 ? "Tailored contract" : t.price === 0 ? "Free forever" : annual ? "Per seat, billed yearly" : "Per seat, billed monthly"}</p>
+                <Link to="/signup"
                   className={`mt-6 inline-flex h-10 w-full items-center justify-center rounded-lg text-[14px] font-medium transition-colors ${
                     t.popular ? "bg-primary text-white hover:bg-primary-hover" : "border border-border bg-surface-elevated text-foreground hover:border-border-hover"
                   }`}
                 >
                   {t.cta}
-                </button>
+                </Link>
                 <ul className="mt-6 space-y-2.5">
                   {t.features.map((f) => (
                     <li key={f} className="flex items-start gap-2.5 text-[13px] text-text-secondary">

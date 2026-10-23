@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as LoginRouteImport } from './routes/login'
+import { Route as PitchRouteImport } from './routes/pitch'
 import { Route as SettingsRouteImport } from './routes/settings'
 import { Route as SignupRouteImport } from './routes/signup'
 import { Route as DriftIdRouteImport } from './routes/drift.$id'
@@ -31,6 +32,11 @@ const DashboardRoute = DashboardRouteImport.update({
 const LoginRoute = LoginRouteImport.update({
   id: '/login',
   path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PitchRoute = PitchRouteImport.update({
+  id: '/pitch',
+  path: '/pitch',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SettingsRoute = SettingsRouteImport.update({
@@ -64,6 +70,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/pitch': typeof PitchRoute
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/drift/$id': typeof DriftIdRoute
@@ -74,6 +81,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/pitch': typeof PitchRoute
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/drift/$id': typeof DriftIdRoute
@@ -85,6 +93,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/dashboard': typeof DashboardRoute
   '/login': typeof LoginRoute
+  '/pitch': typeof PitchRoute
   '/settings': typeof SettingsRoute
   '/signup': typeof SignupRoute
   '/drift/$id': typeof DriftIdRoute
@@ -97,6 +106,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
+    | '/pitch'
     | '/settings'
     | '/signup'
     | '/drift/$id'
@@ -107,6 +117,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
+    | '/pitch'
     | '/settings'
     | '/signup'
     | '/drift/$id'
@@ -117,6 +128,7 @@ export interface FileRouteTypes {
     | '/'
     | '/dashboard'
     | '/login'
+    | '/pitch'
     | '/settings'
     | '/signup'
     | '/drift/$id'
@@ -128,6 +140,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   DashboardRoute: typeof DashboardRoute
   LoginRoute: typeof LoginRoute
+  PitchRoute: typeof PitchRoute
   SettingsRoute: typeof SettingsRoute
   SignupRoute: typeof SignupRoute
   DriftIdRoute: typeof DriftIdRoute
@@ -156,6 +169,13 @@ declare module '@tanstack/react-router' {
       path: '/login'
       fullPath: '/login'
       preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pitch': {
+      id: '/pitch'
+      path: '/pitch'
+      fullPath: '/pitch'
+      preLoaderRoute: typeof PitchRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/settings': {
@@ -200,6 +220,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   DashboardRoute: DashboardRoute,
   LoginRoute: LoginRoute,
+  PitchRoute: PitchRoute,
   SettingsRoute: SettingsRoute,
   SignupRoute: SignupRoute,
   DriftIdRoute: DriftIdRoute,
