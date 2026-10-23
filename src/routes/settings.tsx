@@ -299,8 +299,8 @@ function BillingTab() {
 
   const plans = [
     { id: "free", name: "Free", price: "$0", desc: "1 spec · 10k requests/mo", features: ["1 spec", "10k mock requests / mo", "Drift detection", "Email support"] },
-    { id: "pro", name: "Pro", price: "$29", desc: "Up to 25 specs", features: ["25 specs", "Unlimited mock requests", "Live drift alerts", "GitHub Actions integration", "Priority support"], popular: true },
-    { id: "team", name: "Team", price: "$99", desc: "Unlimited specs + SSO", features: ["Unlimited specs", "SAML SSO", "Audit logs", "Custom storage", "Dedicated support"] },
+    { id: "pro", name: "Pro", price: "$49", desc: "Up to 25 specs", features: ["25 specs", "Unlimited mock requests", "Live drift alerts", "GitHub Actions integration", "Priority support"], popular: true },
+    { id: "team", name: "Team", price: "$149", desc: "Unlimited specs + SSO", features: ["Unlimited specs", "SAML SSO", "Audit logs", "Custom storage", "Dedicated support"] },
   ];
 
   return (
